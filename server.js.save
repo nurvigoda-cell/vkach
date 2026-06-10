@@ -1,0 +1,147 @@
+rm -f /var/www/rospechat/server.js
+nano /var/www/rospechat/server.jsconst express = require('express');
+const mysql = require('mysql2');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const bcrypt = require('bcryptjs');
+
+const app = express();
+const PORT = 3000;
+
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(__dirname));
+
+// Подключение к MySQL
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'lasha2022',
+    database: 'rospechat_db'
+});
+
+db.connect((err) => {
+    if (err) {
+        console.error('Ошибка подключения к БД:', err.message);
+    } else {
+        console.log('Подключено к MySQL');
+    }
+});
+
+// API регистрации
+app.post('/api/register', async (req, res) => {
+    const { login, email, password, confirmPassword, name } = req.body;
+    
+    if (!login || !email || !password || !confirmPassword || !name) {
+        return res.status(400).json({ error: 'Все поля обязательны' });
+    }
+    
+    if (!/^[a-z\-]+$/.test(login)) {
+        return res.status(400).json({ error: 'Логин: только a-z и тире' });
+    }
+    if (login.length < 3) {
+        return res.status(400).json({ error: 'Логин минимум 3 символа' });
+    }
+    
+    if (!/^[^\s@]+@([^\s@]+\.)+[^\s@]+$/.test(email)) {
+        return res.status(400).json({ error: 'Неверный email' });
+    }
+    
+    if (!/^[a-zA-Z]+$/.test(password)) {
+        return res.status(400).json({ error: 'Пароль: только латинские буквы' });
+    }
+    if (password.length < 4) {
+        return res.status(400).json({ error: 'Пароль минимум 4 символа' });
+    }
+    
+    if (password !== confirmPassword) {
+        return res.status(400).json({ error: 'Пароли не совпадают' });
+    }
+    
+    if (name.length < 2) {
+        return res.status(400).json({ error: 'Имя минимум 2 символа' });
+    }
+    
+    try {
+        db.query('SELECT id FROM users WHERE login = ? OR email = ?', [login, email], async (err, results) => {
+            if (err) {
+                return res.status(500).json({ error: 'Ошибка сервера' });
+            }
+            if (results.length > 0) {
+                return res.status(400).json({ error: 'Пользователь уже существует' });
+            }
+            
+            const hashedPassword = await bcrypt.hash(password, 10);
+            
+            db.query('INSERT INTO users (login, email, password, name) VALUES (?, ?, ?, ?)',
+                [login, email, hashedPassword, name],
+                (err, result) => {
+                    if (err) {
+                        return res.status(500).json({ error: 'Ошибка регистрации' });
+                    }
+                    res.json({
+                        success: true,
+                        userId: result.insertId,
+                        user: {
+                            id: result.insertId,
+                            login: login,
+                            name: name,
+                            email: email,
+                            bio: '',
+                            city: '',
+                            phone: '',
+                            website: '',
+                            discount: 10
+                        }
+                    });
+                });
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Ошибка сервера' });
+    }
+});
+
+// API входа
+app.post('/api/login', (req, res) => {
+    const { login, password } = req.body;
+    
+    if (!login || !password) {
+        return res.status(400).json({ error: 'Заполните поля' });
+    }
+    
+    db.query('SELECT * FROM users WHERE login = ?', [login], async (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: 'Ошибка сервера' });
+        }
+        if (results.length === 0) {
+            return res.status(401).json({ error: 'Неверный логин или пароль' });
+        }
+        
+        const user = results[0];
+        const isValid = await bcrypt.compare(password, user.password);
+        
+        if (!isValid) {
+            return res.status(401).json({ error: 'Неверный логин или пароль' });
+        }
+        
+        res.json({
+            success: true,
+            user: {
+                id: user.id,
+                login: user.login,
+                name: user.name,
+                email: user.email,
+                bio: user.bio || '',
+                city: user.city || '',
+                phone: user.phone || '',
+                website: user.website || '',
+                discount: user.discount
+            }
+        });
+    });
+});
+
+app.listen(PORT, () => {
+    console.log(`Сервер на http://localhost:${PORT}`);
+});

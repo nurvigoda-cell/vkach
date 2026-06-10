@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/img/logk.svg" type="image/svg+xml">
+    <title>Центр управления — В КАЧАЛКЕ</title>
+    <link rel="stylesheet" href="/style.css?v=202606091658">
+    <link rel="stylesheet" href="/admin/style.css?v=202606091658">
+</head>
+<body>
+<div class="adm-app">
+
+    <div class="adm-bg-glow adm-bg-glow-1"></div>
+    <div class="adm-bg-glow adm-bg-glow-2"></div>
+    <div class="adm-bg-grid"></div>
+
+    <header class="adm-header">
+        <a href="#" id="adminBackBtn" class="adm-back" onclick="window.location.href='/user/'+localStorage.getItem('currentUserId');return false;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
+        </a>
+        <div class="adm-header-title">⚙️ Центр управления</div>
+        <div class="adm-header-user" id="adminUserBadge"></div>
+    </header>
+
+    <main class="adm-main" id="admMain">
+
+        <!-- ГЛАВНЫЙ ЭКРАН -->
+        <div class="adm-screen active" id="screenDashboard">
+            <div class="adm-welcome">
+                <div class="adm-welcome-title">Добро пожаловать</div>
+                <div class="adm-welcome-sub">Управляйте проектом В КАЧАЛКЕ</div>
+            </div>
+            <div class="adm-cards-grid">
+                <div class="adm-card" onclick="showScreen('blocks')">
+                    <div class="adm-card-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Сундук с сокровищами -->
+                            <rect x="10" y="22" width="28" height="18" rx="2" fill="#c4894a" stroke="#E9AE67" stroke-width="1.5"/>
+                            <rect x="10" y="14" width="28" height="10" rx="2" fill="#E9AE67" stroke="#c4894a" stroke-width="1"/>
+                            <rect x="20" y="27" width="8" height="6" rx="1.5" fill="#1a1a1e" stroke="#E9AE67" stroke-width="1"/>
+                            <circle cx="24" cy="30" r="1.5" fill="#E9AE67"/>
+                            <line x1="14" y1="17" x2="14" y2="21" stroke="#fff" stroke-width="1" opacity="0.5"/>
+                            <line x1="34" y1="17" x2="34" y2="21" stroke="#fff" stroke-width="1" opacity="0.5"/>
+                            <ellipse cx="19" cy="42" rx="4" ry="1.5" fill="#E9AE67" opacity="0.9"/>
+                            <ellipse cx="24" cy="43" rx="4" ry="1.5" fill="#E9AE67" opacity="0.6"/>
+                            <ellipse cx="29" cy="42" rx="4" ry="1.5" fill="#E9AE67" opacity="0.4"/>
+                        </svg>
+                    </div>
+                    <div class="adm-card-info">
+                        <div class="adm-card-title">Управление блоками</div>
+                        <div class="adm-card-desc">Создание, редактирование и настройка блоков</div>
+                    </div>
+                    <div class="adm-card-arrow">›</div>
+                </div>
+                <div class="adm-card" onclick="showScreen('categories')">
+                    <div class="adm-card-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Щит с гербом -->
+                            <path d="M24 6 L38 11 L38 26 Q38 36 24 42 Q10 36 10 26 L10 11 Z" fill="#1a1a1e" stroke="#E9AE67" stroke-width="2"/>
+                            <path d="M24 9 L35 13 L35 25 Q35 33 24 38 Q13 33 13 25 L13 13 Z" fill="#c4894a" opacity="0.25"/>
+                            <rect x="21.5" y="14" width="5" height="22" rx="1" fill="#E9AE67"/>
+                            <rect x="13" y="21.5" width="22" height="5" rx="1" fill="#E9AE67"/>
+                        </svg>
+                    </div>
+                    <div class="adm-card-info">
+                        <div class="adm-card-title">Категории блоков</div>
+                        <div class="adm-card-desc">Управление категориями и их порядком</div>
+                    </div>
+                    <div class="adm-card-arrow">›</div>
+                </div>
+                <div class="adm-card" onclick="showScreen('stats')">
+                    <div class="adm-card-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- График с мечом -->
+                            <line x1="8" y1="38" x2="42" y2="38" stroke="#E9AE67" stroke-width="1" opacity="0.5"/>
+                            <line x1="8" y1="10" x2="8" y2="38" stroke="#E9AE67" stroke-width="1" opacity="0.5"/>
+                            <rect x="12" y="28" width="7" height="10" rx="1.5" fill="#E9AE67" opacity="0.4"/>
+                            <rect x="22" y="21" width="7" height="17" rx="1.5" fill="#E9AE67" opacity="0.6"/>
+                            <rect x="32" y="14" width="7" height="24" rx="1.5" fill="#E9AE67" opacity="0.9"/>
+                            <!-- Меч -->
+                            <line x1="7" y1="41" x2="37" y2="11" stroke="#E9AE67" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M37 11 L41 7 L43 10 L39 13 Z" fill="#E9AE67"/>
+                            <rect x="4" y="39" width="7" height="3" rx="1" fill="#c4894a"/>
+                        </svg>
+                    </div>
+                    <div class="adm-card-info">
+                        <div class="adm-card-title">Статистика блоков</div>
+                        <div class="adm-card-desc">Установки, запуски, активность</div>
+                    </div>
+                    <div class="adm-card-arrow">›</div>
+                </div>
+                <div class="adm-card" onclick="showScreen('frames')">
+                    <div class="adm-card-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Аватар с короной -->
+                            <circle cx="24" cy="30" r="12" fill="#1a1a1e" stroke="#E9AE67" stroke-width="2"/>
+                            <circle cx="24" cy="27" r="5" fill="#E9AE67" opacity="0.6"/>
+                            <path d="M14 36 Q24 31 34 36" fill="#E9AE67" opacity="0.6"/>
+                            <!-- Корона -->
+                            <path d="M14 20 L17 12 L21 17 L24 10 L27 17 L31 12 L34 20 Z" fill="#E9AE67"/>
+                            <rect x="14" y="20" width="20" height="4" rx="1" fill="#c4894a"/>
+                            <circle cx="24" cy="15" r="2" fill="#1a1a1e" stroke="#c4894a" stroke-width="1"/>
+                            <circle cx="17.5" cy="18" r="1.5" fill="#1a1a1e" stroke="#c4894a" stroke-width="0.5"/>
+                            <circle cx="30.5" cy="18" r="1.5" fill="#1a1a1e" stroke="#c4894a" stroke-width="0.5"/>
+                            <!-- Рамка -->
+                            <circle cx="24" cy="30" r="16" fill="none" stroke="#E9AE67" stroke-width="1" stroke-dasharray="3,2" opacity="0.5"/>
+                        </svg>
+                    </div>
+                    <div class="adm-card-info">
+                        <div class="adm-card-title">Обводки аватара</div>
+                        <div class="adm-card-desc">Магазин рамок, цены, загрузка PNG</div>
+                    </div>
+                    <div class="adm-card-arrow">›</div>
+                </div>
+                <div class="adm-card" onclick="showScreen('userstats')">
+                    <div class="adm-card-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Три воина -->
+                            <!-- Левый -->
+                            <circle cx="12" cy="20" r="5" fill="#c4894a" opacity="0.7"/>
+                            <rect x="8" y="26" width="8" height="11" rx="2" fill="#c4894a" opacity="0.7"/>
+                            <!-- Правый -->
+                            <circle cx="36" cy="20" r="5" fill="#c4894a" opacity="0.7"/>
+                            <rect x="32" y="26" width="8" height="11" rx="2" fill="#c4894a" opacity="0.7"/>
+                            <!-- Центральный (главный) -->
+                            <circle cx="24" cy="17" r="7" fill="#E9AE67"/>
+                            <rect x="18" y="25" width="12" height="14" rx="2.5" fill="#E9AE67"/>
+                            <!-- Звезда над главным -->
+                            <polygon points="24,6 25.5,10 30,10 26.5,12.5 28,17 24,14.5 20,17 21.5,12.5 18,10 22.5,10" fill="#E9AE67"/>
+                            <!-- HP бар -->
+                            <rect x="8" y="41" width="32" height="3" rx="1.5" fill="#333"/>
+                            <rect x="8" y="41" width="26" height="3" rx="1.5" fill="#E9AE67"/>
+                        </svg>
+                    </div>
+                    <div class="adm-card-info">
+                        <div class="adm-card-title">Статистика пользователей</div>
+                        <div class="adm-card-desc">Регистрации, активность, пользователи</div>
+                    </div>
+                    <div class="adm-card-arrow">›</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- БЛОКИ -->
+        <div class="adm-screen" id="screenBlocks">
+            <div class="adm-screen-header">
+                <button class="adm-back-btn" onclick="showScreen('dashboard')">← Назад</button>
+                <h2 class="adm-screen-title">📦 Блоки</h2>
+                <button class="adm-btn-primary" onclick="openBlockModal()">+ Добавить</button>
+            </div>
+            <div class="adm-search-row">
+                <input type="text" class="adm-input" id="blocksSearch" placeholder="Поиск блоков..." oninput="filterBlocks()">
+            </div>
+            <div class="adm-table-wrap">
+                <table class="adm-table" id="blocksTable">
+                    <thead>
+                        <tr>
+                            <th>Иконка</th>
+                            <th>Название</th>
+                            <th>Категория</th>
+                            <th>Флаги</th>
+                            <th>Версия</th>
+                            <th>Обновлён</th>
+                            <th>Установок</th>
+                            <th>Запусков</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="blocksTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- КАТЕГОРИИ -->
+        <div class="adm-screen" id="screenCategories">
+            <div class="adm-screen-header">
+                <button class="adm-back-btn" onclick="showScreen('dashboard')">← Назад</button>
+                <h2 class="adm-screen-title">📂 Категории</h2>
+                <button class="adm-btn-primary" onclick="openCatModal()">+ Добавить</button>
+            </div>
+            <div class="adm-cats-list" id="catsList"></div>
+        </div>
+
+        <!-- СТАТИСТИКА -->
+        <div class="adm-screen" id="screenStats">
+            <div class="adm-screen-header">
+                <button class="adm-back-btn" onclick="showScreen('dashboard')">← Назад</button>
+                <h2 class="adm-screen-title">📈 Статистика</h2>
+                <button class="adm-btn-ghost" onclick="loadStats()">↻ Обновить</button>
+            </div>
+            <div class="adm-stats-grid" id="statsGrid"></div>
+        </div>
+
+
+        <!-- СТАТИСТИКА ПОЛЬЗОВАТЕЛЕЙ -->
+        <div class="adm-screen" id="screenUserstats">
+            <div class="adm-screen-header">
+                <button class="adm-back-btn" onclick="showScreen('dashboard')">← Назад</button>
+                <h2 class="adm-screen-title">👥 Статистика пользователей</h2>
+            </div>
+            <div class="adm-users-summary">
+                <span>В КАЧАЛКЕ: </span><b id="totalUsersCount">...</b> пользователей
+            </div>
+            <div class="adm-users-search">
+                <input type="text" id="usersSearch" class="adm-input" placeholder="🔍 Поиск по ID, логину или имени..." oninput="searchUsers(this.value)">
+            </div>
+            <div class="adm-users-table-wrap">
+                <table class="adm-table" id="usersTable">
+                    <thead><tr>
+                        <th>ID</th>
+                        <th>Логин</th>
+                        <th>Имя</th>
+                        <th>О себе</th>
+                        <th>Качкоины</th>
+                        <th>Действия</th>
+                    </tr></thead>
+                    <tbody id="usersTableBody"></tbody>
+                </table>
+            </div>
+            <div class="adm-pagination" id="usersPagination"></div>
+        </div>
+
+        <!-- МОДАЛ РЕДАКТИРОВАНИЯ ЮЗЕРА -->
+        <div class="adm-modal-overlay" id="editUserModal" style="display:none;">
+            <div class="adm-modal">
+                <div class="adm-modal-header">
+                    <h3 class="adm-modal-title" id="editUserTitle">Редактировать пользователя</h3>
+                    <button class="adm-modal-close" onclick="closeEditUserModal()">&times;</button>
+                </div>
+                <div class="adm-modal-body">
+                    <input type="hidden" id="editUserId">
+                    <div class="adm-field">
+                        <label class="adm-label">Имя</label>
+                        <input type="text" class="adm-input" id="editUserName">
+                    </div>
+                    <div class="adm-field">
+                        <label class="adm-label">Качкоины</label>
+                        <input type="number" class="adm-input" id="editUserCoins" min="0">
+                    </div>
+                    <div class="adm-field">
+                        <label class="adm-label">О себе (bio)</label>
+                        <textarea class="adm-input" id="editUserBio" rows="3" style="resize:vertical;"></textarea>
+                    </div>
+                </div>
+                <div class="adm-modal-footer">
+                    <button class="adm-btn-ghost" onclick="closeEditUserModal()">Отмена</button>
+                    <button class="adm-btn-primary" onclick="saveUserEdit()">💾 Сохранить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ОБВОДКИ АВАТАРА -->
+        <div class="adm-screen" id="screenFrames">
+            <div class="adm-screen-header">
+                <button class="adm-back-btn" onclick="showScreen('dashboard')">← Назад</button>
+                <h2 class="adm-screen-title">🖼 Обводки аватара</h2>
+                <button class="adm-btn-primary" onclick="openFrameModal()">+ Добавить</button>
+            </div>
+            <!-- Фильтр категорий -->
+            <div class="adm-frames-filter" id="framesFilter">
+                <button class="adm-filter-btn active" data-cat="all">Все</button>
+                <button class="adm-filter-btn" data-cat="standard">🛡 Базовые</button>
+                <button class="adm-filter-btn" data-cat="sport">💪 Спорт</button>
+                <button class="adm-filter-btn" data-cat="rpg">⚔️ RPG</button>
+                <button class="adm-filter-btn" data-cat="light_dark">🌗 Свет и Тьма</button>
+                <button class="adm-filter-btn" data-cat="music">🎵 Музыка</button>
+                <button class="adm-filter-btn" data-cat="epic">🔥 Эпические</button>
+            </div>
+            <div class="adm-frames-list" id="framesList"></div>
+        </div>
+
+    </main>
+</div>
+
+<!-- МОДАЛ: БЛОК -->
+<div class="adm-modal-overlay" id="blockModal">
+    <div class="adm-modal adm-modal-wide">
+        <div class="adm-modal-header">
+            <h3 class="adm-modal-title" id="blockModalTitle">Новый блок</h3>
+            <button class="adm-modal-close" onclick="closeBlockModal()">✕</button>
+        </div>
+        <div class="adm-modal-body">
+            <input type="hidden" id="blockId">
+
+            <!-- Строка 1: block_id + иконка -->
+            <div class="adm-form-row">
+                <div class="adm-form-group">
+                    <label class="adm-label">block_id *</label>
+                    <input type="text" class="adm-input" id="bBlockId" placeholder="workout-protocols">
+                </div>
+                <div class="adm-form-group adm-icon-upload-group">
+                    <label class="adm-label">Иконка</label>
+                    <input type="hidden" id="bIcon">
+                    <div class="adm-icon-upload-wrap">
+                        <div class="adm-icon-preview" id="bIconPreview">
+                            <div style="width:36px;height:36px;border-radius:8px;background:#2a2a2a;display:flex;align-items:center;justify-content:center;font-size:22px">📦</div>
+                        </div>
+                        <div class="adm-icon-btns">
+                            <input type="file" id="iconFile" accept="image/png,image/jpeg,image/webp,image/svg+xml" style="display:none" onchange="onIconFile(this)">
+                            <button class="adm-btn-ghost adm-btn-sm" onclick="document.getElementById('iconFile').click()" type="button">⬆ Загрузить</button>
+                            <button class="adm-btn-ghost adm-btn-sm" onclick="clearIcon()" type="button">✕ Очистить</button>
+                        </div>
+                    </div>
+                    <div style="font-size:10px;color:#444;margin-top:4px">SVG, PNG, WebP · до 512×512</div>
+                </div>
+            </div>
+
+            <!-- Название -->
+            <div class="adm-form-group">
+                <label class="adm-label">Название *</label>
+                <input type="text" class="adm-input" id="bName" placeholder="Протоколы тренировок">
+            </div>
+
+            <!-- Краткое описание -->
+            <div class="adm-form-group">
+                <label class="adm-label">Краткое описание</label>
+                <textarea class="adm-input adm-textarea" id="bDesc" placeholder="Краткое описание (отображается в карточке)..." rows="2"></textarea>
+            </div>
+
+            <!-- Полное описание -->
+            <div class="adm-form-group">
+                <label class="adm-label">Полное описание</label>
+                <textarea class="adm-input adm-textarea" id="bFullDesc" placeholder="Подробное описание (отображается в модальном окне)..." rows="4"></textarea>
+            </div>
+
+            <!-- Возможности -->
+            <div class="adm-form-group">
+                <label class="adm-label">Возможности <span style="color:#555;font-weight:400">(каждая с новой строки)</span></label>
+                <textarea class="adm-input adm-textarea" id="bFeatures" placeholder="Подсчёт калорий&#10;Баланс БЖУ&#10;История питания" rows="4"></textarea>
+            </div>
+
+            <!-- Что нового -->
+            <div class="adm-form-group">
+                <label class="adm-label">Что нового</label>
+                <textarea class="adm-input adm-textarea" id="bWhatsNew" placeholder="Описание изменений в новой версии..." rows="3"></textarea>
+            </div>
+
+            <!-- Строка: категория + порядок + версия -->
+            <div class="adm-form-row">
+                <div class="adm-form-group">
+                    <label class="adm-label">Категория</label>
+                    <select id="bCategory" style="display:none"></select>
+                    <div id="bCategoryDropdown"></div>
+                </div>
+                <div class="adm-form-group" style="max-width:100px">
+                    <label class="adm-label">Порядок</label>
+                    <input type="number" class="adm-input" id="bSort" value="0">
+                </div>
+                <div class="adm-form-group" style="max-width:120px">
+                    <label class="adm-label">Версия</label>
+                    <input type="text" class="adm-input" id="bVersion" placeholder="1.0.0">
+                </div>
+            </div>
+
+            <!-- URL -->
+            <div class="adm-form-group">
+                <label class="adm-label">URL запуска *</label>
+                <input type="text" class="adm-input" id="bUrl" placeholder="/blocks/my-block/index.html">
+            </div>
+
+            <!-- Флаги -->
+            <div class="adm-flags-row">
+                <label class="adm-flag-item"><input type="checkbox" id="bPopular"> <span>⭐ Популярный</span></label>
+                <label class="adm-flag-item"><input type="checkbox" id="bNew"> <span>🆕 Новинка</span></label>
+                <label class="adm-flag-item"><input type="checkbox" id="bFeatured"> <span>🔝 Рекомендуемый</span></label>
+                <label class="adm-flag-item"><input type="checkbox" id="bHidden"> <span>🙈 Скрытый</span></label>
+            </div>
+
+            <!-- Скриншоты -->
+            <div class="adm-form-group" id="screenshotsSection">
+                <label class="adm-label">Скриншоты <span style="color:#555;font-weight:400">(макс. 5)</span></label>
+                <div class="adm-screenshots-preview" id="screenshotsPreviews"></div>
+                <div class="adm-screenshots-add">
+                    <input type="file" id="screenshotFile" accept="image/*" multiple style="display:none" onchange="onScreenshotFiles(this)">
+                    <button class="adm-btn-ghost" onclick="document.getElementById('screenshotFile').click()">+ Добавить изображение</button>
+                    <span style="color:#555;font-size:11px;margin-left:8px">или вставьте URL:</span>
+                    <div style="display:flex;gap:8px;margin-top:8px">
+                        <input type="text" class="adm-input" id="screenshotUrl" placeholder="https://example.com/screenshot.jpg" style="flex:1">
+                        <button class="adm-btn-ghost" onclick="addScreenshotByUrl()">Добавить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="adm-modal-footer">
+            <button class="adm-btn-ghost" onclick="closeBlockModal()">Отмена</button>
+            <button class="adm-btn-primary" onclick="saveBlock()">Сохранить</button>
+        </div>
+    </div>
+</div>
+
+<!-- МОДАЛ: КАТЕГОРИЯ -->
+<div class="adm-modal-overlay" id="catModal">
+    <div class="adm-modal adm-modal-sm">
+        <div class="adm-modal-header">
+            <h3 class="adm-modal-title" id="catModalTitle">Новая категория</h3>
+            <button class="adm-modal-close" onclick="closeCatModal()">✕</button>
+        </div>
+        <div class="adm-modal-body">
+            <input type="hidden" id="catId">
+
+            <!-- Сетка предустановленных категорий (только при создании) -->
+            <div class="cat-preset-grid" id="catPresetGrid" style="display:none"></div>
+
+            <!-- Форма редактирования (только при редактировании) -->
+            <div id="catEditForm">
+                <div class="adm-form-row">
+                    <div class="adm-form-group flex2">
+                        <label class="adm-label">Название *</label>
+                        <input type="text" class="adm-input" id="cName" placeholder="Тренировки">
+                    </div>
+                    <div class="adm-form-group">
+                        <label class="adm-label">Иконка</label>
+                        <input type="text" class="adm-input" id="cIcon" placeholder="🏋️" maxlength="4">
+                    </div>
+                </div>
+                <div class="adm-form-row">
+                    <div class="adm-form-group">
+                        <label class="adm-label">Порядок</label>
+                        <input type="number" class="adm-input" id="cSort" value="0">
+                    </div>
+                    <div class="adm-form-group" style="justify-content:flex-end;padding-top:28px">
+                        <label class="adm-flag-item">
+                            <input type="checkbox" id="cActive" checked> <span>Активна</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="adm-modal-footer">
+            <button class="adm-btn-ghost" onclick="closeCatModal()">Отмена</button>
+            <button class="adm-btn-primary" onclick="saveCat()">Сохранить</button>
+        </div>
+    </div>
+</div>
+
+<div class="adm-toast" id="admToast"></div>
+<script src="/admin/script.js?v=202606091658"></script>
+
+<!-- МОДАЛ: РАМКА -->
+<div class="adm-modal-overlay" id="frameModal" style="display:none;">
+    <div class="adm-modal">
+        <div class="adm-modal-header">
+            <h3 class="adm-modal-title" id="frameModalTitle">Новая рамка</h3>
+            <button class="adm-modal-close" onclick="closeFrameModal()">&times;</button>
+        </div>
+        <div class="adm-modal-body">
+            <input type="hidden" id="frameModalId">
+
+            <!-- Превью рамки -->
+            <div style="display:flex;justify-content:center;margin-bottom:16px;">
+                <div style="width:80px;height:80px;border-radius:50%;background:#111;position:relative;display:flex;align-items:center;justify-content:center;">
+                    <span style="font-size:32px;">💪</span>
+                    <img id="frameModalPreview" src="" alt="" style="display:none;position:absolute;inset:-12px;width:calc(100% + 24px);height:calc(100% + 24px);object-fit:contain;z-index:2;">
+                </div>
+            </div>
+
+            <div class="adm-field">
+                <label class="adm-label">📁 Загрузить PNG рамку</label>
+                <input type="file" class="adm-input" id="frameModalFile" accept="image/png,image/webp" onchange="onFrameFileChange(this)" style="padding:8px;">
+                <div style="font-size:11px;color:#888;margin-top:3px;">Текущий файл: <span id="frameModalCurrentImg" style="color:#E9AE67;">не задан</span></div>
+            </div>
+            <div class="adm-field">
+                <label class="adm-label">ID рамки (латиница, без пробелов)</label>
+                <input type="text" class="adm-input" id="frameModalFrameId" placeholder="например: gold">
+            </div>
+            <div class="adm-field">
+                <label class="adm-label">Название</label>
+                <input type="text" class="adm-input" id="frameModalName" placeholder="Золотая">
+            </div>
+            <div class="adm-field">
+                <label class="adm-label">Цена (Качкоины)</label>
+                <input type="number" class="adm-input" id="frameModalPrice" placeholder="100" min="0">
+            </div>
+            <div class="adm-field">
+                <label class="adm-label">Категория</label>
+                <select class="adm-input" id="frameModalCategory">
+                    <option value="standard">🛡 Базовые</option>
+                    <option value="sport">💪 Спорт / Качалка</option>
+                    <option value="rpg">⚔️ RPG / Fantasy</option>
+                    <option value="light_dark">🌗 Свет и Тьма</option>
+                    <option value="music">🎵 Музыка</option>
+                    <option value="epic">🔥 Эпические</option>
+                </select>
+            </div>
+            <div class="adm-field">
+                <label class="adm-label">Порядок (чем меньше — тем выше)</label>
+                <input type="number" class="adm-input" id="frameModalSort" placeholder="1" min="1">
+            </div>
+            <div class="adm-field">
+                <label class="adm-label">Статус в магазине</label>
+                <select class="adm-input" id="frameModalActive">
+                    <option value="1">👁 Показать в магазине</option>
+                    <option value="0">🚫 Скрыть из магазина</option>
+                </select>
+            </div>
+        </div>
+        <div class="adm-modal-footer">
+            <button class="adm-btn-ghost" onclick="closeFrameModal()">Отмена</button>
+            <button class="adm-btn-primary" onclick="saveFrame()">💾 Сохранить</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

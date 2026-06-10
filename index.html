@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/img/logk.svg">
+    <title>В КАЧАЛКЕ</title>
+    <link rel="stylesheet" href="/style.css?v=202606101005">
+    <link rel="stylesheet" href="/preloader.css?v=202606101005">
+    <link rel="stylesheet" href="/new-index.css?v=202606101005">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#E9AE67">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="В КАЧАЛКЕ">
+    <link rel="apple-touch-icon" href="/img/icon-152.png">
+</head>
+<body>
+    <div id="preloader" class="preloader">
+        <div class="preloader-content">
+            <div class="preloader-progress"><div class="preloader-progress-bar"></div></div>
+            <div class="preloader-text">0%</div>
+        </div>
+    </div>
+
+    <div class="index-page">
+
+        <!-- Фоновые элементы -->
+        <div class="bg-glow bg-glow-1"></div>
+        <div class="bg-glow bg-glow-2"></div>
+        <div class="bg-grid"></div>
+
+        <!-- Декоративные полосы -->
+        <div class="deco-lines">
+            <div class="deco-line"></div>
+            <div class="deco-line"></div>
+            <div class="deco-line"></div>
+        </div>
+
+        <!-- ГЛАВНЫЙ БЛОК -->
+        <main class="idx-main">
+
+            <!-- Логотип -->
+            <div class="main-logo-wrap">
+                <img src="/img/logk.svg" alt="В КАЧАЛКЕ" class="main-logo">
+                <div class="main-logo-title">В КАЧАЛКЕ</div>
+            </div>
+
+<!-- Карточка профиля -->
+            <div class="profile-card" id="profileCard">
+
+                <!-- Аватар -->
+                <div class="profile-avatar-wrap">
+                    <div class="avatar-ring">
+                        <div class="avatar-circle" id="avatar">
+                            <img id="avatarImg" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:none;">
+                            <span id="avatarText">👤</span>
+                        </div>
+                    </div>
+                    <div class="avatar-status"></div>
+                </div>
+
+                <!-- Инфо -->
+                <div class="profile-info">
+                    <div class="user-name-large" id="userNameDisplay">Гость</div>
+                    <div class="user-login" id="userLoginDisplay" style="display:none"></div>
+                    <div class="user-id" id="userIdDisplay" style="display:none"></div>
+                </div>
+
+            </div>
+
+            <!-- CTA кнопка -->
+            <div class="idx-cta">
+                <button id="profileBtn" class="cta-btn">
+                    <span class="cta-btn-text">В КАЧАЛКУ</span>
+                    <span class="cta-btn-arrow">→</span>
+                </button>
+            </div>
+
+        </main>
+
+        <!-- ФУТЕР -->
+        <footer class="idx-footer">
+            <button id="logoutBtn" class="logout-btn" style="display:none">Выйти из аккаунта</button>
+            <div class="idx-footer-copy">© В КАЧАЛКЕ — Всё для спортсмена</div>
+        </footer>
+
+    </div>
+
+    <!-- Бургер меню -->
+    <div id="burgerModal" class="burger-modal">
+        <div class="burger-modal-content">
+            <div class="burger-modal-header">
+                <span class="burger-modal-logo">⚡ В КАЧАЛКЕ</span>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="burger-nav">
+                <button class="nav-btn" id="navHome">На главную</button>
+                <button class="nav-btn" id="navProfile"><span class="nav-btn-icon">👤</span>Личный кабинет</button>
+            </div>
+            <div class="auth-buttons">
+                <div class="auth-label">Аккаунт</div>
+                <a href="login.html" class="modal-btn-login" id="menuLoginBtn">🔑 Войти</a>
+                <a href="reg.html" class="modal-btn-register" id="menuRegisterBtn">✨ Регистрация</a>
+                <button class="modal-btn-logout" id="menuLogoutBtn" style="display:none">🚪 Выйти</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/version.js?v=202606101005"></script>
+    <script src="/preloader.js?v=202606101005"></script>
+    <script src="/burger.js?v=202606101005"></script>
+    <script src="/new-index.js?v=202606101005"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(r => console.log('✅ SW:', r))
+                    .catch(e => console.log('❌ SW:', e));
+            });
+        }
+    </script>
+</body>
+</html>

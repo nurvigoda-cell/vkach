@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="/img/fav.svg">
+    <title>БЖУ в Ккал | Калькулятор + Поиск</title>
+    <link rel="stylesheet" href="/style.css?v=202606101005">
+    <link rel="stylesheet" href="/preloader.css?v=202606101005">
+    <link rel="stylesheet" href="style.css?v=202606101005">
+    <link rel="stylesheet" href="/user1.css?v=202606101005">
+    <link rel="stylesheet" href="/user2.css?v=202606101005">
+    <link rel="stylesheet" href="/user3.css?v=202606101005">
+</head>
+
+<body>
+
+    <div id="preloader" class="preloader">
+        <div class="preloader-content">
+            <div class="preloader-progress">
+                <div class="preloader-progress-bar"></div>
+            </div>
+            <div class="preloader-text">0%</div>
+        </div>
+    </div>
+
+    <div class="bzhu-page">
+        <div class="bzhu-container">
+
+            <!-- Шапка -->
+            <div class="bzhu-header">
+                <div class="burger-menu" id="burgerMenu">
+                    <span></span><span></span><span></span>
+                </div>
+                <div class="logo" onclick="window.location.href='/'">🥩 БЖУ → Ккал</div>
+                <div style="width: 30px;"></div>
+            </div>
+
+            <!-- Главный блок (уменьшенный) -->
+            <div class="bzhu-card">
+
+                <!-- Поля ввода БЖУ (компактные) -->
+                <div class="bzhu-inputs">
+                    <div class="input-group protein">
+                        <div class="input-icon">🥩</div>
+                        <div class="input-field">
+                            <label>Белки</label>
+                            <input type="number" id="protein" class="bzhu-input" placeholder="0" value="0" step="any">
+                            <span class="input-unit">г</span>
+                        </div>
+                        <div class="input-info">1 г = 4 ккал</div>
+                    </div>
+
+                    <div class="input-group fat">
+                        <div class="input-icon">🧈</div>
+                        <div class="input-field">
+                            <label>Жиры</label>
+                            <input type="number" id="fat" class="bzhu-input" placeholder="0" value="0" step="any">
+                            <span class="input-unit">г</span>
+                        </div>
+                        <div class="input-info">1 г = 9 ккал</div>
+                    </div>
+
+                    <div class="input-group carbs">
+                        <div class="input-icon">🍚</div>
+                        <div class="input-field">
+                            <label>Углеводы</label>
+                            <input type="number" id="carbs" class="bzhu-input" placeholder="0" value="0" step="any">
+                            <span class="input-unit">г</span>
+                        </div>
+                        <div class="input-info">1 г = 4 ккал</div>
+                    </div>
+                </div>
+
+                <!-- Результат -->
+                <div class="bzhu-result">
+                    <div class="result-card">
+                        <div class="result-label">Общая калорийность</div>
+                        <div class="result-value" id="totalCalories">0</div>
+                        <div class="result-unit">ккал</div>
+                    </div>
+                </div>
+
+                <!-- Детализация -->
+                <div class="bzhu-details">
+                    <div class="detail-item">
+                        <span class="detail-color protein-color"></span>
+                        <span class="detail-label">Белки</span>
+                        <span class="detail-value" id="proteinCalories">0 ккал</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-color fat-color"></span>
+                        <span class="detail-label">Жиры</span>
+                        <span class="detail-value" id="fatCalories">0 ккал</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-color carbs-color"></span>
+                        <span class="detail-label">Углеводы</span>
+                        <span class="detail-value" id="carbsCalories">0 ккал</span>
+                    </div>
+                </div>
+
+                <!-- Кнопка сброса -->
+                <div class="bzhu-reset">
+                    <button id="resetBtn" class="reset-btn">🔄 Сбросить все</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Нижняя навигация -->
+    <div class="bottom-nav">
+        <div class="bottom-nav-item" id="navProfileBottom">
+            <div class="bottom-nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5" fill="none" />
+                    <path d="M5 20V19C5 15.5 8 13 12 13C16 13 19 15.5 19 19V20" stroke="currentColor" stroke-width="1.5"
+                        fill="none" stroke-linecap="round" />
+                </svg></div>
+            <div class="bottom-nav-label">Я</div>
+        </div>
+        <div class="bottom-nav-item" id="navMessagesBottom" style="position: relative;">
+            <div class="bottom-nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M3 20L4 15C2.5 12.5 2.5 9.5 4 7C5.5 4.5 8.5 3 12 3C16 3 19.5 4.5 21 7C22.5 9.5 22.5 12.5 21 15C19.5 17.5 16 19 12 19H3Z"
+                        stroke="currentColor" stroke-width="1.5" fill="none" />
+                    <circle cx="8" cy="11" r="1" fill="currentColor" />
+                    <circle cx="12" cy="11" r="1" fill="currentColor" />
+                    <circle cx="16" cy="11" r="1" fill="currentColor" />
+                </svg></div>
+            <div class="bottom-nav-label">Сообщения</div>
+        </div>
+        <div class="bottom-nav-item" id="navBlocksBottom">
+            <div class="bottom-nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <rect x="4" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"
+                        fill="none" />
+                    <rect x="14" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"
+                        fill="none" />
+                    <rect x="4" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"
+                        fill="none" />
+                    <rect x="14" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"
+                        fill="none" />
+                </svg></div>
+            <div class="bottom-nav-label">Блоки</div>
+        </div>
+    </div>
+
+    <!-- Модальные окна для сообщений -->
+    <div id="messagesModal" class="friends-modal">
+        <div class="friends-modal-content">
+            <div class="friends-modal-header">
+                <div style="width:36px;"></div>
+                <div style="flex:1;text-align:center">
+                    <h3 style="color:#E9AE67; margin:0;">Сообщения</h3>
+                </div>
+                <span class="messages-modal-close" style="font-size:28px; cursor:pointer; color:#aaa;">&times;</span>
+            </div>
+            <div class="modal-search"><input type="text" id="dialogsSearchInput" class="modal-search-input"
+                    placeholder="Поиск по имени, логину или ID..."></div>
+            <div class="friends-modal-body" id="dialogsModalBody"></div>
+        </div>
+    </div>
+
+    <div id="chatModal" class="friends-modal">
+        <div class="friends-modal-content" style="height:85vh">
+            <div class="chat-container" id="chatContainer"></div>
+        </div>
+    </div>
+
+    <div id="burgerModal" class="burger-modal">
+        <div class="burger-modal-content">
+            <div class="burger-modal-header"><span class="close-modal">&times;</span></div>
+            <div class="burger-nav"><button class="nav-btn" id="navProfile">Личный кабинет</button><button
+                    class="nav-btn" id="navBlocks">Блоки</button></div>
+            <div class="auth-buttons"><a href="/login.html" class="modal-btn-login">Войти</a><a href="/reg.html"
+                    class="modal-btn-register">Регистрация</a><button class="modal-btn-logout"
+                    style="display:none">Выйти</button></div>
+        </div>
+    </div>
+
+    <script src="/version.js?v=202606101005"></script>
+    <script src="/preloader.js?v=202606101005"></script>
+    <script src="/burger.js?v=202606101005"></script>
+    <script src="/messages.js?v=202606101005"></script>
+    <script src="script.js?v=202606101005"></script>
+</body>
+
+</html>

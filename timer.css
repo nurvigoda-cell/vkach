@@ -1,0 +1,372 @@
+/* timer.css v2.0 — SUPERTIMER в стиле проекта */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&family=Share+Tech+Mono&display=swap');
+
+:root {
+    --accent:  #E9AE67;
+    --accent2: #c4894a;
+    --adim:    rgba(233,174,103,0.12);
+    --aglow:   rgba(233,174,103,0.28);
+    --bg:      #0e0e12;
+    --bg2:     #141418;
+    --bg3:     #1c1c22;
+    --bg4:     #242428;
+    --border:  rgba(255,255,255,0.06);
+    --bacc:    rgba(233,174,103,0.22);
+    --text:    #f0f0f0;
+    --muted:   #888;
+    --dim:     #555;
+    --red:     #ef5350;
+    --green:   #4caf8a;
+    --nav-h:   70px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+body {
+    background: var(--bg);
+    font-family: 'Nunito','Segoe UI',sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: var(--nav-h);
+    overflow-x: hidden;
+}
+
+/* ===== ФОН ===== */
+body::before {
+    content: '';
+    position: fixed; inset:0;
+    background:
+        radial-gradient(ellipse 70% 50% at 50% 0%, rgba(233,174,103,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 80% 80%, rgba(233,174,103,0.04) 0%, transparent 60%);
+    pointer-events: none; z-index:0;
+}
+body::after {
+    content: '';
+    position: fixed; inset:0;
+    background-image:
+        linear-gradient(rgba(233,174,103,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(233,174,103,0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none; z-index:0;
+}
+
+/* ===== ШАПКА ===== */
+.timer-page { min-height:100vh; position:relative; z-index:1; }
+
+.timer-header {
+    position: fixed; top:0; left:0; right:0;
+    display: flex; justify-content:space-between; align-items:center;
+    padding: 0 20px;
+    height: 56px;
+    background: rgba(14,14,18,0.97);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--bacc);
+    z-index: 100;
+}
+
+.timer-header-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-shadow: 0 0 16px var(--aglow);
+}
+
+/* ===== КОНТЕЙНЕР ===== */
+.timer-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 80px 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative; z-index:1;
+}
+
+/* ===== КРУГОВОЙ ТАЙМЕР ===== */
+.timer-circle-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px 0 8px;
+}
+
+.timer-circle-bg {
+    position: relative;
+    width: 240px; height: 240px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.timer-svg {
+    position: absolute;
+    top:0; left:0;
+    width: 100%; height: 100%;
+    filter: drop-shadow(0 0 8px rgba(233,174,103,0.2));
+}
+
+.timer-circle-bg-line { stroke: rgba(255,255,255,0.05); }
+.timer-circle-progress {
+    transition: stroke-dashoffset 0.5s linear;
+    filter: drop-shadow(0 0 6px rgba(233,174,103,0.5));
+}
+
+.timer-display {
+    position: relative; z-index:2;
+    display: flex; align-items: center; gap: 2px;
+    margin-bottom: 8px;
+}
+
+.timer-minutes, .timer-seconds {
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    font-size: 58px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(233,174,103,0.2);
+    transition: color 0.3s;
+}
+
+.timer-colon {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 48px;
+    color: var(--accent);
+    animation: colonBlink 1s step-end infinite;
+    margin: 0 2px;
+    line-height: 1;
+}
+@keyframes colonBlink { 0%,100%{opacity:1;} 50%{opacity:0.25;} }
+
+.timer-status {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    position: relative; z-index:2;
+    transition: color 0.3s;
+}
+
+/* Состояния */
+.timer-display.running .timer-minutes,
+.timer-display.running .timer-seconds { color: var(--accent); text-shadow: 0 0 24px var(--aglow); }
+.timer-status.running { color: var(--green); }
+.timer-status.paused  { color: #ffaa00; }
+.timer-status.work    { color: var(--accent); }
+.timer-status.rest    { color: #4fc3f7; }
+
+/* ===== РЕЖИМЫ ===== */
+.timer-modes {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 8px;
+    background: var(--bg2);
+    border-radius: 18px;
+    padding: 6px;
+    border: 1px solid var(--border);
+}
+
+.mode-btn {
+    padding: 10px 6px;
+    background: none;
+    border: none;
+    border-radius: 13px;
+    color: var(--muted);
+    font-size: 11px; font-weight: 800; font-family: inherit;
+    cursor: pointer; transition: all .2s;
+    text-align: center;
+    white-space: nowrap;
+}
+.mode-btn.active {
+    background: var(--accent);
+    color: #0e0e12;
+    box-shadow: 0 2px 10px var(--aglow);
+}
+.mode-btn:hover:not(.active) { color: var(--accent); background: var(--adim); }
+.mode-btn:active { transform: scale(.92); }
+
+/* ===== ПАНЕЛЬ УПРАВЛЕНИЯ ===== */
+.controls-panel {
+    background: var(--bg2);
+    border-radius: 16px;
+    padding: 18px 16px;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+    overflow: hidden;
+}
+.controls-panel::before {
+    content: '';
+    position: absolute; top:0; left:0; right:0; height:2px;
+    background: linear-gradient(90deg,transparent,var(--accent),transparent);
+}
+
+/* Пресет кнопки */
+.preset-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 10px;
+    margin-top: 2px;
+}
+
+.preset-btn {
+    padding: 8px 6px;
+    background: var(--bg3);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 11px; font-weight: 700; font-family: inherit;
+    cursor: pointer; transition: all .2s;
+    white-space: nowrap;
+    text-align: center;
+}
+.preset-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--adim); }
+.preset-btn:active { transform: scale(.92); }
+
+/* Пикер времени */
+.time-picker { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.interval-settings { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 4px; }
+
+.time-picker-group {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--bg3);
+    border-radius: 14px; padding: 12px 16px;
+    border: 1px solid var(--border);
+    flex-wrap: wrap; justify-content: center;
+    min-width: 100px;
+}
+
+.time-picker-label {
+    font-size: 11px; font-weight: 800;
+    color: var(--muted); text-transform: uppercase;
+    letter-spacing: .8px; width: 100%; text-align: center;
+    margin-bottom: 4px;
+}
+.time-picker-label-sm {
+    font-size: 11px; color: var(--dim); font-weight: 700;
+}
+
+.time-picker-controls {
+    display: flex; align-items: center; gap: 10px;
+}
+
+.time-picker-btn {
+    width: 28px; height: 28px;
+    background: var(--bg4); border: 1.5px solid var(--border);
+    border-radius: 50%;
+    color: var(--accent); font-size: 16px; font-weight: 900;
+    cursor: pointer; transition: all .2s;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+}
+.time-picker-btn:hover { background: var(--adim); border-color: var(--accent); transform: scale(1.1); }
+.time-picker-btn:active { transform: scale(.88); }
+
+.time-picker-value {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 22px; color: var(--text); font-weight: 400;
+    min-width: 32px; text-align: center;
+}
+
+/* Кнопки действий */
+.action-buttons {
+    display: flex; gap: 14px;
+    margin-top: 4px;
+}
+
+.action-btn {
+    flex: 1; padding: 11px;
+    border: none; border-radius: 14px;
+    font-size: 14px; font-weight: 800; font-family: inherit;
+    cursor: pointer; transition: all .2s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+
+.start-countdown,
+.start-interval {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #0e0e12;
+    box-shadow: 0 2px 12px var(--aglow);
+}
+.start-countdown:hover, .start-interval:hover { transform: translateY(-2px); box-shadow: 0 5px 18px var(--aglow); }
+
+.reset-countdown,
+.reset-interval {
+    background: var(--bg3);
+    color: var(--muted);
+    border: 1.5px solid var(--border);
+}
+.reset-countdown:hover, .reset-interval:hover { border-color: var(--accent); color: var(--accent); }
+.action-btn:active { transform: scale(.95); }
+
+/* Секундомер — большие кнопки */
+#stopwatchControls .preset-buttons {
+    grid-template-columns: repeat(3,1fr);
+}
+#stopwatchControls .preset-btn {
+    padding: 14px 8px;
+    font-size: 13px;
+}
+#stopwatchControls .preset-btn:first-child {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #0e0e12; border-color: transparent;
+    box-shadow: 0 2px 10px var(--aglow);
+}
+
+/* ===== ЗВУК ===== */
+.sound-toast {
+    position: fixed;
+    top: 70px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg2);
+    border: 1px solid var(--bacc);
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-size: 24px;
+    z-index: 9999;
+    box-shadow: 0 4px 20px rgba(0,0,0,.4);
+    animation: toastPop .3s ease;
+}
+@keyframes toastPop { from{opacity:0;transform:translateX(-50%) scale(.8);}to{opacity:1;transform:translateX(-50%) scale(1);} }
+
+/* ===== НИЖНЯЯ НАВИГАЦИЯ ===== */
+.bottom-nav {
+    position: fixed; bottom:0; left:0; right:0;
+    height: var(--nav-h);
+    background: rgba(14,14,18,.97);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    display: flex; justify-content:space-around; align-items:center;
+    padding: 0 4px; border-top: 1px solid var(--border);
+    z-index: 9999; box-shadow: 0 -4px 20px rgba(0,0,0,.3);
+}
+.bottom-nav-item {
+    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:3px; padding:8px 2px; cursor:pointer; transition:all .2s;
+    border-radius:12px; color:#555;
+}
+.bottom-nav-item:hover { color:var(--accent); background:var(--adim); }
+.bottom-nav-item:active { transform:scale(.86); }
+.bottom-nav-icon { display:flex; align-items:center; justify-content:center; width:24px; height:24px; color:inherit; }
+.bottom-nav-label { font-size:10px; font-weight:700; font-family:inherit; color:inherit; white-space:nowrap; }
+.bottom-nav-item.active { color:var(--accent); }
+
+/* ===== АДАПТИВ ===== */
+@media(min-width:769px) {
+    .bottom-nav { justify-content:center; gap:0; padding:0 24px; }
+    .bottom-nav-item { max-width:120px; padding:10px 6px; }
+    .bottom-nav-icon { width:26px; height:26px; }
+    .bottom-nav-label { font-size:11px; }
+    .timer-circle-bg { width:280px; height:280px; }
+    .timer-minutes, .timer-seconds { font-size:68px; }
+}
+@media(max-width:380px) {
+    .timer-circle-bg { width:200px; height:200px; }
+    .timer-minutes, .timer-seconds { font-size:48px; }
+    .timer-colon { font-size:38px; }
+    .time-picker { gap:8px; }
+}

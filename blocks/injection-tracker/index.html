@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>💉 Трекер препаратов — В КАЧАЛКЕ</title>
+    <link rel="icon" href="/img/fav.svg">
+    <link rel="stylesheet" href="/style.css?v=202606101005">
+    <link rel="stylesheet" href="/preloader.css?v=202606101005">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="preloader" class="preloader">
+    <div class="preloader-content">
+        <div class="preloader-progress"><div class="preloader-progress-bar"></div></div>
+        <div class="preloader-text">0%</div>
+    </div>
+</div>
+
+<div class="page">
+
+    <!-- ШАПКА -->
+    <header class="topbar">
+        <div class="burger-menu" id="burgerMenu"><span></span><span></span><span></span></div>
+        <div class="topbar-title">💉 Трекер препаратов</div>
+        <div style="width:32px"></div>
+    </header>
+
+    <!-- СКРОЛЛИРУЕМЫЙ КОНТЕНТ -->
+    <div class="scroll-body">
+
+        <!-- 1. СПИСОК ПРЕПАРАТОВ (без журнала сегодня) -->
+        <section class="card" id="drugsSection">
+            <div class="card-header">
+                <div class="card-title">💊 Список препаратов</div>
+                <button class="btn-add-drug" id="openAddDrugBtn">+ Добавить</button>
+            </div>
+            <div class="drugs-list" id="drugsList">
+                <div class="empty-drugs">Нет препаратов. Нажмите «+ Добавить»</div>
+            </div>
+        </section>
+
+        <!-- 2. ТЕКУЩИЙ ДЕНЬ -->
+        <section class="day-inline-card">
+            <span class="day-inline-label">Текущий день:</span>
+            <span class="day-inline-value" id="currentDayValue"></span>
+        </section>
+
+        <!-- 3. КАЛЕНДАРЬ -->
+        <section class="card calendar-card">
+            <div class="calendar-header">
+                <button class="cal-arrow" id="calPrev">‹</button>
+                <div class="cal-month-title" id="calMonthTitle"></div>
+                <button class="cal-arrow" id="calNext">›</button>
+            </div>
+            <div class="calendar-days-row" id="calDaysRow"></div>
+        </section>
+
+        <!-- 4. ИСТОРИЯ ДНЯ (здесь показываем все записи за выбранный день) -->
+        <section class="card history-day-card" id="historyDayCard">
+            <div class="card-title" id="historyDayTitle">История дня</div>
+            <div class="history-day-list" id="historyDayList">
+                <div class="empty-history">Нажмите на день в календаре</div>
+            </div>
+        </section>
+
+        <!-- 5. СТАТИСТИКА -->
+        <section class="card stats-card">
+            <div class="stats-row">
+                <div class="stat-block">
+                    <div class="stat-val" id="statToday">0</div>
+                    <div class="stat-lbl">Уколов сегодня</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-block">
+                    <div class="stat-val" id="statMonth">0</div>
+                    <div class="stat-lbl">Уколов за: <span id="statMonthName"></span></div>
+                </div>
+            </div>
+        </section>
+
+    </div><!-- end scroll-body -->
+</div><!-- end page -->
+
+<!-- НИЖНЯЯ НАВИГАЦИЯ -->
+<div class="bottom-nav">
+    <div class="bottom-nav-item" id="navProfileBottom">
+        <div class="bottom-nav-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <path d="M5 20V19C5 15.5 8 13 12 13C16 13 19 15.5 19 19V20" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            </svg>
+        </div>
+        <div class="bottom-nav-label">Я</div>
+    </div>
+    <div class="bottom-nav-item" id="navMessagesBottom">
+        <div class="bottom-nav-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M3 20L4 15C2.5 12.5 2.5 9.5 4 7C5.5 4.5 8.5 3 12 3C16 3 19.5 4.5 21 7C22.5 9.5 22.5 12.5 21 15C19.5 17.5 16 19 12 19H3Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <circle cx="8" cy="11" r="1" fill="currentColor"/>
+                <circle cx="12" cy="11" r="1" fill="currentColor"/>
+                <circle cx="16" cy="11" r="1" fill="currentColor"/>
+            </svg>
+        </div>
+        <div class="bottom-nav-label">Сообщения</div>
+    </div>
+    <div class="bottom-nav-item" id="navBlocksBottom">
+        <div class="bottom-nav-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <rect x="4" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <rect x="14" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <rect x="4" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <rect x="14" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            </svg>
+        </div>
+        <div class="bottom-nav-label">Блоки</div>
+    </div>
+</div>
+
+<!-- МОДАЛ: ДОБАВИТЬ ПРЕПАРАТ -->
+<div class="modal-overlay" id="addDrugModal">
+    <div class="modal-box">
+        <div class="modal-handle"></div>
+        <div class="modal-hdr">
+            <span id="addDrugModalTitle">➕ Новый препарат</span>
+            <button class="modal-x" id="closeAddDrugModal">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="field-grp">
+                <label>Название *</label>
+                <input type="text" id="drugNameInput" class="field-inp" placeholder="Тестостерон энантат" maxlength="60">
+            </div>
+            <div class="field-grp">
+                <label>Дозировка</label>
+                <input type="text" id="drugDoseInput" class="field-inp" placeholder="250 мг">
+            </div>
+            <div class="field-grp">
+                <label>Цвет метки</label>
+                <div class="color-pick" id="colorPick">
+                    <button class="cp-dot active" data-c="#E9AE67" style="background:#E9AE67"></button>
+                    <button class="cp-dot" data-c="#4fc3f7" style="background:#4fc3f7"></button>
+                    <button class="cp-dot" data-c="#81c784" style="background:#81c784"></button>
+                    <button class="cp-dot" data-c="#ef5350" style="background:#ef5350"></button>
+                    <button class="cp-dot" data-c="#ce93d8" style="background:#ce93d8"></button>
+                    <button class="cp-dot" data-c="#ff8a65" style="background:#ff8a65"></button>
+                </div>
+            </div>
+        </div>
+        <div class="modal-ftr">
+            <button class="btn-cancel" id="cancelAddDrug">Отмена</button>
+            <button class="btn-save" id="saveDrugBtn">💾 Сохранить</button>
+        </div>
+    </div>
+</div>
+
+<!-- БУРГЕР -->
+<div id="burgerModal" class="burger-modal">
+    <div class="burger-modal-content">
+        <div class="burger-modal-header">
+            <span class="burger-modal-logo">⚡ В КАЧАЛКЕ</span>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="burger-nav">
+            <button class="nav-btn" id="navProfile"><span class="nav-btn-icon">👤</span>Личный кабинет</button>
+            <button class="nav-btn" id="navBlocks"><span class="nav-btn-icon">⚡</span>Блоки</button>
+        </div>
+        <div class="auth-buttons">
+            <div class="auth-label">Аккаунт</div>
+            <a href="/login.html" class="modal-btn-login" id="menuLoginBtn">🔑 Войти</a>
+            <a href="/reg.html" class="modal-btn-register" id="menuRegisterBtn">✨ Регистрация</a>
+            <button class="modal-btn-logout" id="menuLogoutBtn" style="display:none;">🚪 Выйти</button>
+        </div>
+    </div>
+</div>
+
+<script src="/version.js?v=202606101005"></script>
+<script src="/preloader.js?v=202606101005"></script>
+<script src="/burger.js?v=202606101005"></script>
+<script src="/messages.js?v=202606101005"></script>
+<script src="script.js"></script>
+</body>
+</html>

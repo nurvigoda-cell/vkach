@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="/img/fav.svg">
+    <title>SUPERTIMER - В КАЧАЛКЕ</title>
+    <link rel="stylesheet" href="/style.css?v=202606101005">
+    <link rel="stylesheet" href="/preloader.css?v=202606101005">
+    <link rel="stylesheet" href="/timer.css?v=202606101005">
+    <link rel="stylesheet" href="/user1.css?v=202606101005">
+    <link rel="stylesheet" href="/user2.css?v=202606101005">
+    <link rel="stylesheet" href="/user3.css?v=202606101005">
+</head>
+
+<body>
+    <div id="preloader" class="preloader">
+        <div class="preloader-content">
+            <div class="preloader-progress">
+                <div class="preloader-progress-bar"></div>
+            </div>
+            <div class="preloader-text">0%</div>
+        </div>
+    </div>
+
+    <div class="timer-page">
+        <div class="timer-header">
+            <div class="burger-menu" id="burgerMenu">
+                <span></span><span></span><span></span>
+            </div>
+            <div class="timer-header-title">⏱ SUPERTIMER</div>
+            <div style="width:32px"></div>
+        </div>
+
+        <div class="timer-container">
+            <!-- Главный круг с таймером -->
+            <div class="timer-circle-container">
+                <div class="timer-circle-bg">
+                    <svg class="timer-svg" viewBox="0 0 200 200">
+                        <defs>
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#E9AE67" />
+                                <stop offset="100%" stop-color="#ff6b6b" />
+                            </linearGradient>
+                        </defs>
+                        <circle class="timer-circle-bg-line" cx="100" cy="100" r="90" stroke="#333" stroke-width="8"
+                            fill="none" />
+                        <circle class="timer-circle-progress" cx="100" cy="100" r="90" stroke="url(#gradient)"
+                            stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="565.48"
+                            stroke-dashoffset="0" transform="rotate(-90 100 100)" />
+                    </svg>
+                    <div class="timer-display" id="timerDisplay">
+                        <span class="timer-minutes" id="timerMinutes">00</span>
+                        <span class="timer-colon">:</span>
+                        <span class="timer-seconds" id="timerSeconds">00</span>
+                    </div>
+                    <div class="timer-status" id="timerStatus">Готов</div>
+                </div>
+            </div>
+
+            <!-- Режимы таймера -->
+            <div class="timer-modes">
+                <button class="mode-btn active" data-mode="stopwatch">⏱️ Секундомер</button>
+                <button class="mode-btn" data-mode="countdown">⏪ Обратный отсчёт</button>
+                <button class="mode-btn" data-mode="interval">🔄 Интервальный</button>
+            </div>
+
+            <!-- Панель управления (для каждого режима своя) -->
+            <div class="controls-panel" id="stopwatchControls">
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-time="0">▶️ Старт</button>
+                    <button class="preset-btn" data-time="-1">⏸️ Пауза</button>
+                    <button class="preset-btn" data-time="-2">🔄 Сброс</button>
+                </div>
+            </div>
+
+            <div class="controls-panel" id="countdownControls" style="display: none;">
+                <div class="time-picker">
+                    <div class="time-picker-group">
+                        <span class="time-picker-label">Минуты</span>
+                        <div class="time-picker-controls">
+                            <button class="time-picker-btn down" data-target="min">−</button>
+                            <span class="time-picker-value" id="cdMinutes">1</span>
+                            <button class="time-picker-btn up" data-target="min">+</button>
+                        </div>
+                    </div>
+                    <div class="time-picker-group">
+                        <span class="time-picker-label">Секунды</span>
+                        <div class="time-picker-controls">
+                            <button class="time-picker-btn down" data-target="sec">−</button>
+                            <span class="time-picker-value" id="cdSeconds">0</span>
+                            <button class="time-picker-btn up" data-target="sec">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-time="30">⚡ 30 сек</button>
+                    <button class="preset-btn" data-time="60">⚡ 1 мин</button>
+                    <button class="preset-btn" data-time="90">⚡ 1:30 мин</button>
+                    <button class="preset-btn" data-time="120">⚡ 2 мин</button>
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn start-countdown" id="startCountdown">🚀 Запустить</button>
+                    <button class="action-btn reset-countdown" id="resetCountdown">🔄 Сброс</button>
+                </div>
+            </div>
+
+            <div class="controls-panel" id="intervalControls" style="display: none;">
+                <div class="interval-settings">
+                    <div class="time-picker-group">
+                        <span class="time-picker-label">Работа</span>
+                        <div class="time-picker-controls">
+                            <button class="time-picker-btn down" data-target="workMin">−</button>
+                            <span class="time-picker-value" id="workMinutes">0</span>
+                            <button class="time-picker-btn up" data-target="workMin">+</button>
+                        </div>
+                        <span class="time-picker-label-sm">мин</span>
+                        <div class="time-picker-controls">
+                            <button class="time-picker-btn down" data-target="workSec">−</button>
+                            <span class="time-picker-value" id="workSeconds">30</span>
+                            <button class="time-picker-btn up" data-target="workSec">+</button>
+                        </div>
+                        <span class="time-picker-label-sm">сек</span>
+                    </div>
+                    <div class="time-picker-group">
+                        <span class="time-picker-label">Отдых</span>
+                        <div class="time-picker-controls">
+                            <button class="time-picker-btn down" data-target="restMin">−</button>
+                            <span class="time-picker-value" id="restMinutes">0</span>
+                            <button class="time-picker-btn up" data-target="restMin">+</button>
+                        </div>
+                        <span class="time-picker-label-sm">мин</span>
+                        <div class="time-picker-controls">
+                            <button class="time-picker-btn down" data-target="restSec">−</button>
+                            <span class="time-picker-value" id="restSeconds">15</span>
+                            <button class="time-picker-btn up" data-target="restSec">+</button>
+                        </div>
+                        <span class="time-picker-label-sm">сек</span>
+                    </div>
+                    <div class="time-picker-group">
+                        <span class="time-picker-label">Раунды</span>
+                        <div class="time-picker-controls">
+                            <button class="time-picker-btn down" data-target="rounds">−</button>
+                            <span class="time-picker-value" id="roundsCount">3</span>
+                            <button class="time-picker-btn up" data-target="rounds">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn start-interval" id="startInterval">🔥 Старт интервал</button>
+                    <button class="action-btn reset-interval" id="resetInterval">🔄 Сброс</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- НИЖНЯЯ НАВИГАЦИЯ -->
+    <div class="bottom-nav">
+        <div class="bottom-nav-item" id="navProfileBottom">
+            <div class="bottom-nav-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5" fill="none" />
+                    <path d="M5 20V19C5 15.5 8 13 12 13C16 13 19 15.5 19 19V20" stroke="currentColor" stroke-width="1.5"
+                        fill="none" stroke-linecap="round" />
+                </svg>
+            </div>
+            <div class="bottom-nav-label">Я</div>
+        </div>
+        <div class="bottom-nav-item" id="navMessagesBottom" style="position: relative;">
+            <div class="bottom-nav-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M3 20L4 15C2.5 12.5 2.5 9.5 4 7C5.5 4.5 8.5 3 12 3C16 3 19.5 4.5 21 7C22.5 9.5 22.5 12.5 21 15C19.5 17.5 16 19 12 19H3Z"
+                        stroke="currentColor" stroke-width="1.5" fill="none" />
+                    <circle cx="8" cy="11" r="1" fill="currentColor" />
+                    <circle cx="12" cy="11" r="1" fill="currentColor" />
+                    <circle cx="16" cy="11" r="1" fill="currentColor" />
+                </svg>
+            </div>
+            <div class="bottom-nav-label">Сообщения</div>
+        </div>
+        <div class="bottom-nav-item" id="navBlocksBottom">
+            <div class="bottom-nav-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="4" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"
+                        fill="none" />
+                    <rect x="14" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"
+                        fill="none" />
+                    <rect x="4" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"
+                        fill="none" />
+                    <rect x="14" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"
+                        fill="none" />
+                </svg>
+            </div>
+            <div class="bottom-nav-label">Блоки</div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+    <!-- Toast для звука -->
+    <div id="soundToast" class="sound-toast" style="display: none;">
+        <div class="sound-toast-content">🔔</div>
+    </div>
+
+    <div id="burgerModal" class="burger-modal">
+        <div class="burger-modal-content">
+            <div class="burger-modal-header">
+                <span class="burger-modal-logo">⚡ В КАЧАЛКЕ</span>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="burger-nav">
+                <button class="nav-btn" id="navProfile"><span class="nav-btn-icon">👤</span>Личный кабинет</button>
+                <button class="nav-btn" id="navBlocks"><span class="nav-btn-icon">⚡</span>Блоки</button>
+            </div>
+            <div class="auth-buttons">
+                <div class="auth-label">Аккаунт</div>
+                <a href="login.html" class="modal-btn-login" id="menuLoginBtn">🔑 Войти</a>
+                <a href="reg.html" class="modal-btn-register" id="menuRegisterBtn">✨ Регистрация</a>
+                <button class="modal-btn-logout" id="menuLogoutBtn" style="display: none;">🚪 Выйти</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/version.js?v=202606101005"></script>
+    <script src="/preloader.js?v=202606101005"></script>
+    <script src="/burger.js?v=202606101005"></script>
+    <script src="/messages.js?v=202606101005"></script>
+    <script src="/timer.js?v=202606101005"></script>
+</body>
+
+</html>

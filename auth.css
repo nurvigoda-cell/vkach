@@ -1,0 +1,392 @@
+/* auth.css v1.0 — единый стиль для login, reg, forgot */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap');
+
+:root {
+    --accent:  #E9AE67;
+    --accent2: #c4894a;
+    --bg:      #0e0e12;
+    --bg2:     #141418;
+    --bg3:     #1c1c22;
+    --bg4:     #242428;
+    --border:  rgba(255,255,255,0.06);
+    --bacc:    rgba(233,174,103,0.22);
+    --text:    #f0f0f0;
+    --muted:   #888;
+    --dim:     #555;
+    --red:     #ef5350;
+    --rdim:    rgba(239,83,80,0.12);
+    --green:   #4caf8a;
+    --r:       16px;
+    --rpill:   50px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+body {
+    background: var(--bg);
+    font-family: 'Nunito','Segoe UI',sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ===== ФОН ===== */
+body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+        radial-gradient(ellipse 60% 50% at 80% 10%, rgba(233,174,103,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 10% 90%, rgba(233,174,103,0.05) 0%, transparent 60%);
+    pointer-events: none; z-index: 0;
+}
+body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+        linear-gradient(rgba(233,174,103,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(233,174,103,0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none; z-index: 0;
+}
+
+/* ===== СТРАНИЦА ===== */
+.login-page,
+.register-page,
+.forgot-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 32px 16px 40px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== КОНТЕЙНЕР ===== */
+.login-container,
+.register-container,
+.forgot-container {
+    width: 100%;
+    max-width: 440px;
+    background: linear-gradient(145deg, #18181e, #111115);
+    border-radius: 28px;
+    padding: 36px 28px 32px;
+    border: 1px solid var(--border);
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.5),
+        0 0 0 1px rgba(255,255,255,0.03) inset;
+    position: relative;
+    overflow: hidden;
+    animation: authCardIn 0.5s cubic-bezier(0.34,1.4,0.64,1) both;
+}
+@keyframes authCardIn {
+    from { opacity:0; transform:translateY(24px) scale(0.97); }
+    to   { opacity:1; transform:translateY(0) scale(1); }
+}
+
+/* Оранжевая полоска сверху */
+.login-container::before,
+.register-container::before,
+.forgot-container::before {
+    content: '';
+    position: absolute; top:0; left:0; right:0; height:2px;
+    background: linear-gradient(90deg, transparent, var(--accent) 40%, var(--accent2) 60%, transparent);
+}
+
+/* Фоновый glow */
+.login-container::after,
+.register-container::after,
+.forgot-container::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(233,174,103,0.05) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* ===== ЛОГОТИП (верх формы) ===== */
+.auth-logo-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 24px;
+}
+.auth-logo-top a { text-decoration: none; }
+.auth-logo-img {
+    width: 64px; height: 64px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 12px rgba(233,174,103,0.35));
+    transition: filter 0.3s;
+}
+.auth-logo-img:hover {
+    filter: drop-shadow(0 0 20px rgba(233,174,103,0.6));
+}
+.auth-logo-tag {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--dim);
+    margin-top: 4px;
+}
+
+/* ===== ЗАГОЛОВКИ ===== */
+.login-title,
+.register-title,
+.forgot-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-align: center;
+    margin-bottom: 6px;
+    text-shadow: 0 0 20px rgba(233,174,103,0.25);
+}
+
+.forgot-description {
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 600;
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+/* ===== ФОРМА ===== */
+.form-group { margin-bottom: 16px; }
+
+.form-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 7px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 13px 16px;
+    background: var(--bg3);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r);
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Nunito', sans-serif;
+    outline: none;
+    transition: all 0.2s ease;
+}
+.form-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(233,174,103,0.1);
+    background: var(--bg4);
+}
+.form-input::placeholder { color: var(--dim); font-weight: 400; }
+.form-input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 100px var(--bg3) inset !important;
+    -webkit-text-fill-color: var(--text) !important;
+}
+
+/* Пароль с глазком */
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.password-wrapper .form-input { padding-right: 48px; }
+
+.toggle-password {
+    position: absolute;
+    right: 14px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 17px;
+    color: var(--dim);
+    transition: all 0.2s;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+}
+.toggle-password:hover { color: var(--accent); background: rgba(233,174,103,0.1); }
+
+/* Ошибки */
+.error-message {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--red);
+    margin-top: 5px;
+    min-height: 16px;
+    display: none;
+}
+.error-message.show,
+.error-message:not(:empty) { display: block; }
+
+/* ===== КНОПКИ ОТПРАВИТЬ ===== */
+.login-btn,
+.register-btn,
+.forgot-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    border-radius: var(--r);
+    color: #0e0e12;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 3px 16px rgba(233,174,103,0.3);
+    position: relative;
+    overflow: hidden;
+    margin-top: 8px;
+}
+.login-btn::before,
+.register-btn::before,
+.forgot-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.4s ease;
+}
+.login-btn:hover::before,
+.register-btn:hover::before,
+.forgot-btn:hover::before { left: 150%; }
+.login-btn:hover,
+.register-btn:hover,
+.forgot-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px rgba(233,174,103,0.45);
+}
+.login-btn:active,
+.register-btn:active,
+.forgot-btn:active { transform: scale(0.97); }
+.login-btn:disabled,
+.register-btn:disabled,
+.forgot-btn:disabled {
+    background: var(--bg3); color: var(--dim);
+    box-shadow: none; cursor: not-allowed; transform: none;
+}
+
+/* ===== ССЫЛКИ ===== */
+.forgot-password,
+.register-link,
+.login-link {
+    text-align: center;
+    margin-top: 16px;
+}
+.forgot-password a,
+.register-link a,
+.login-link a {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+    padding: 4px 0;
+    display: inline-block;
+}
+.forgot-password a:hover,
+.register-link a:hover,
+.login-link a:hover { color: var(--accent); }
+
+/* ===== РАЗДЕЛИТЕЛЬ ===== */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 0;
+}
+.auth-divider::before,
+.auth-divider::after {
+    content: ''; flex: 1;
+    height: 1px; background: var(--border);
+}
+.auth-divider span {
+    font-size: 11px; color: var(--dim);
+    font-weight: 700; white-space: nowrap;
+}
+
+/* ===== МОДАЛ FORGOT (пароль) ===== */
+@keyframes modalPop {
+    from { opacity:0; transform:scale(0.88) translateY(12px); }
+    to   { opacity:1; transform:scale(1) translateY(0); }
+}
+.password-modal {
+    display: none; position: fixed; inset:0;
+    background: rgba(0,0,0,0.85);
+    z-index: 20000; justify-content: center; align-items: center;
+    backdrop-filter: blur(5px);
+}
+.password-modal-content {
+    background: var(--bg2);
+    border-radius: 24px; width: 90%; max-width: 380px;
+    animation: modalPop 0.3s cubic-bezier(0.34,1.4,0.64,1);
+    border: 1px solid var(--bacc);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+.password-modal-header {
+    display: flex; justify-content: flex-end;
+    padding: 14px 18px 0;
+}
+.password-modal-close {
+    font-size: 26px; cursor: pointer;
+    color: var(--muted); transition: color 0.2s;
+    background: none; border: none; line-height: 1;
+}
+.password-modal-close:hover { color: var(--accent); }
+.password-modal-body {
+    padding: 10px 28px 28px; text-align: center;
+}
+.password-modal-icon { font-size: 48px; margin-bottom: 12px; }
+.password-modal-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; letter-spacing: 2px;
+    color: var(--accent); margin-bottom: 16px;
+}
+.password-modal-login {
+    font-size: 13px; color: var(--muted);
+    margin-bottom: 8px; font-weight: 600;
+}
+.password-modal-password {
+    font-size: 22px; font-weight: 900;
+    color: var(--text); letter-spacing: 2px;
+    background: var(--bg3); border-radius: 12px;
+    padding: 12px 16px; margin-bottom: 12px;
+    border: 1px solid var(--bacc);
+    word-break: break-all;
+}
+.password-modal-note {
+    font-size: 12px; color: var(--muted);
+    margin-bottom: 20px; line-height: 1.5; font-weight: 600;
+}
+.password-modal-btn {
+    width: 100%; padding: 13px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; border-radius: var(--r);
+    color: #0e0e12;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px; letter-spacing: 1.5px;
+    cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 2px 10px rgba(233,174,103,0.3);
+}
+.password-modal-btn:hover { transform: translateY(-2px); }
+.password-modal-btn:active { transform: scale(0.96); }
+
+/* ===== АДАПТИВ ===== */
+@media (max-width: 420px) {
+    .login-container,
+    .register-container,
+    .forgot-container { padding: 28px 20px 24px; border-radius: 22px; }
+    .login-title, .register-title, .forgot-title { font-size: 28px; }
+    .form-input { padding: 12px 14px; font-size: 14px; }
+}

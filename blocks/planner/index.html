@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="/img/logk.svg" type="image/svg+xml">
+    <title>Трекер-Планировщик</title>
+    <link rel="stylesheet" href="/style.css?v=202606101005">
+    <link rel="stylesheet" href="/blocks/planner/style.css?v=202606101005">
+</head>
+<body>
+<div class="planner-app" id="plannerApp">
+
+    <!-- ===== ЭКРАН: ГЛАВНЫЙ ===== -->
+    <div class="pl-screen active" id="screenMain">
+        <header class="pl-header">
+            <button class="pl-back-btn" onclick="history.back()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </button>
+            <h1 class="pl-header-title">Трекер-Планировщик</h1>
+            <div class="pl-header-actions">
+                <button class="pl-icon-btn" id="btnSearch" title="Поиск" onclick="showScreen('search')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                    </svg>
+                </button>
+                <button class="pl-today-btn" onclick="goToToday()">Сегодня</button>
+                <button class="pl-icon-btn" onclick="showScreen('types')" title="Типы">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Календарь -->
+        <div class="pl-calendar-wrap">
+            <div class="pl-cal-nav">
+                <button class="pl-cal-nav-btn" id="btnPrevMonth">&#8249;</button>
+                <span class="pl-cal-month-title" id="calMonthTitle"></span>
+                <button class="pl-cal-nav-btn" id="btnNextMonth">&#8250;</button>
+            </div>
+            <div class="pl-cal-dow-row">
+                <span>Пн</span><span>Вт</span><span>Ср</span>
+                <span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+            </div>
+            <div class="pl-cal-grid" id="calGrid"></div>
+        </div>
+
+        <!-- Список событий дня -->
+        <div class="pl-day-section">
+            <div class="pl-day-header">
+                <span class="pl-day-title" id="dayTitle"></span>
+            </div>
+            <div class="pl-events-list" id="eventsList"></div>
+        </div>
+
+        <!-- FAB -->
+        <button class="pl-fab" onclick="showScreen('create')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- ===== ЭКРАН: СОЗДАНИЕ / РЕДАКТИРОВАНИЕ ===== -->
+    <div class="pl-screen" id="screenEdit">
+        <header class="pl-header">
+            <button class="pl-back-btn" onclick="closeEditScreen()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </button>
+            <h1 class="pl-header-title" id="editScreenTitle">Новое событие</h1>
+            <button class="pl-save-btn" onclick="saveEvent()">Сохранить</button>
+        </header>
+        <div class="pl-form-scroll">
+            <input type="hidden" id="editEventId">
+            <div class="pl-form-group">
+                <label class="pl-label">Название *</label>
+                <input type="text" class="pl-input" id="editTitle" placeholder="Напр. Тестостерон энантат">
+            </div>
+            <div class="pl-form-row">
+                <div class="pl-form-group flex1">
+                    <label class="pl-label">Время *</label>
+                    <input type="time" class="pl-input" id="editTime">
+                </div>
+                <div class="pl-form-group flex1">
+                    <label class="pl-label">Дата *</label>
+                    <input type="date" class="pl-input" id="editDateStart">
+                </div>
+            </div>
+            <div class="pl-form-group">
+                <label class="pl-label">Дата окончания <span style="color:var(--muted);font-size:10px">(необязательно)</span></label>
+                <input type="date" class="pl-input" id="editDateEnd">
+            </div>
+            <div class="pl-form-group">
+                <label class="pl-label">Дни недели <span style="color:#ef5350">*</span></label>
+                <div class="pl-weekdays" id="editWeekdays">
+                    <button type="button" class="pl-wd" data-day="1">ПН</button>
+                    <button type="button" class="pl-wd" data-day="2">ВТ</button>
+                    <button type="button" class="pl-wd" data-day="3">СР</button>
+                    <button type="button" class="pl-wd" data-day="4">ЧТ</button>
+                    <button type="button" class="pl-wd" data-day="5">ПТ</button>
+                    <button type="button" class="pl-wd" data-day="6">СБ</button>
+                    <button type="button" class="pl-wd" data-day="0">ВС</button>
+                </div>
+                <div class="pl-wd-hint" id="wdHint"></div>
+            </div>
+            <div class="pl-form-group">
+                <label class="pl-label">Тип события</label>
+                <button class="pl-select-btn" id="editTypeBtn" onclick="showScreen('typeSelect')">
+                    <span id="editTypeName">Выбрать тип</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+                </button>
+            </div>
+            <div class="pl-form-group">
+                <label class="pl-label">Цвет метки</label>
+                <div class="pl-color-row" id="editColorRow"></div>
+            </div>
+            <div class="pl-form-group">
+                <label class="pl-label">Примечание</label>
+                <textarea class="pl-input pl-textarea" id="editNote" placeholder="Доп. информация..."></textarea>
+            </div>
+            <div class="pl-form-group pl-check-row">
+                <input type="checkbox" class="pl-checkbox" id="editDone">
+                <label for="editDone" class="pl-label">Выполнено</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ЭКРАН: ПРОСМОТР СОБЫТИЯ ===== -->
+    <div class="pl-screen" id="screenView">
+        <header class="pl-header">
+            <button class="pl-back-btn" onclick="showScreen('main')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </button>
+            <h1 class="pl-header-title">Событие</h1>
+            <div class="pl-header-actions">
+                <button class="pl-icon-btn" onclick="openEditFromView()" title="Редактировать">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                    </svg>
+                </button>
+                <button class="pl-icon-btn" onclick="deleteEventFromView()" title="Удалить" style="color:#ef5350">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+        <div class="pl-view-body" id="viewBody"></div>
+    </div>
+
+    <!-- ===== ЭКРАН: ВЫБОР ТИПА ===== -->
+    <div class="pl-screen" id="screenTypeSelect">
+        <header class="pl-header">
+            <button class="pl-back-btn" onclick="showScreen('edit')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </button>
+            <h1 class="pl-header-title">Тип события</h1>
+            <div style="width:32px"></div>
+        </header>
+        <div class="pl-type-list" id="typeSelectList"></div>
+    </div>
+
+    <!-- ===== ЭКРАН: УПРАВЛЕНИЕ ТИПАМИ ===== -->
+    <div class="pl-screen" id="screenTypes">
+        <header class="pl-header">
+            <button class="pl-back-btn" onclick="showScreen('main')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </button>
+            <h1 class="pl-header-title">Типы событий</h1>
+            <button class="pl-icon-btn" onclick="showAddTypeForm()">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            </button>
+        </header>
+        <div class="pl-types-manage" id="typesManageList"></div>
+        <!-- Форма добавления типа -->
+        <div class="pl-add-type-form" id="addTypeForm" style="display:none">
+            <input type="text" class="pl-input" id="newTypeName" placeholder="Название типа">
+            <div class="pl-color-row" id="newTypeColorRow"></div>
+            <div class="pl-add-type-btns">
+                <button class="pl-btn-cancel" onclick="hideAddTypeForm()">Отмена</button>
+                <button class="pl-btn-save" onclick="createType()">Создать</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ЭКРАН: ПОИСК ===== -->
+    <div class="pl-screen" id="screenSearch">
+        <header class="pl-header">
+            <button class="pl-back-btn" onclick="showScreen('main')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </button>
+            <h1 class="pl-header-title">Поиск</h1>
+            <button class="pl-icon-btn" id="btnFilters" onclick="toggleFilters()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/>
+                </svg>
+            </button>
+        </header>
+        <div class="pl-search-wrap">
+            <div class="pl-search-input-row">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color:#888;flex-shrink:0">
+                    <path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+                <input type="text" class="pl-search-input" id="searchInput" placeholder="Введите запрос...">
+            </div>
+            <!-- Фильтры -->
+            <div class="pl-filters-panel" id="filtersPanel" style="display:none">
+                <div class="pl-filter-header">
+                    <span>Типы событий</span>
+                    <button class="pl-filter-reset" onclick="resetFilters()">Сбросить</button>
+                </div>
+                <div class="pl-filter-types" id="filterTypes"></div>
+                <button class="pl-apply-filters-btn" onclick="applyFilters()">Применить</button>
+            </div>
+        </div>
+        <div class="pl-search-results" id="searchResults">
+            <div class="pl-empty">Введите запрос для поиска</div>
+        </div>
+    </div>
+
+    <!-- Нижняя навигация -->
+    <div class="bottom-nav">
+        <div class="bottom-nav-item" id="navProfileBottom">
+            <div class="bottom-nav-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <path d="M5 20V19C5 15.5 8 13 12 13C16 13 19 15.5 19 19V20" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="bottom-nav-label">Я</div>
+        </div>
+        <div class="bottom-nav-item" id="navMessagesBottom" style="position:relative">
+            <div class="bottom-nav-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 20L4 15C2.5 12.5 2.5 9.5 4 7C5.5 4.5 8.5 3 12 3C16 3 19.5 4.5 21 7C22.5 9.5 22.5 12.5 21 15C19.5 17.5 16 19 12 19H3Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <circle cx="8" cy="11" r="1" fill="currentColor"/>
+                    <circle cx="12" cy="11" r="1" fill="currentColor"/>
+                    <circle cx="16" cy="11" r="1" fill="currentColor"/>
+                </svg>
+            </div>
+            <div class="bottom-nav-label">Сообщения</div>
+        </div>
+        <div class="bottom-nav-item" id="navBlocksBottom">
+            <div class="bottom-nav-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <rect x="4" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <rect x="14" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <rect x="4" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <rect x="14" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                </svg>
+            </div>
+            <div class="bottom-nav-label">Блоки</div>
+        </div>
+    </div>
+
+</div><!-- /planner-app -->
+
+    <!-- Модальные окна для сообщений -->
+    <div id="messagesModal" class="friends-modal">
+        <div class="friends-modal-content">
+            <div class="friends-modal-header">
+                <h2 class="friends-modal-title">Сообщения</h2>
+                <span class="friends-modal-close" id="closeMessagesModal">&times;</span>
+            </div>
+            <div class="friends-modal-body" id="messagesModalBody"></div>
+        </div>
+    </div>
+
+    <!-- Бургер меню -->
+    <div id="burgerModal" class="burger-modal">
+        <div class="burger-modal-content">
+            <div class="burger-modal-header">
+                <span class="burger-modal-logo">⚡ В КАЧАЛКЕ</span>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="burger-nav">
+                <button class="nav-btn" id="navProfile"><span class="nav-btn-icon">👤</span>Личный кабинет</button>
+                <button class="nav-btn" id="navBlocks"><span class="nav-btn-icon">⚡</span>Блоки</button>
+            </div>
+            <div class="auth-buttons">
+                <div class="auth-label">Аккаунт</div>
+                <a href="/login.html" class="modal-btn-login" id="menuLoginBtn">🔑 Войти</a>
+                <a href="/reg.html" class="modal-btn-register" id="menuRegisterBtn">✨ Регистрация</a>
+                <button class="modal-btn-logout" id="menuLogoutBtn" style="display:none">🚪 Выйти</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/version.js?v=202606101005"></script>
+    <script src="/preloader.js?v=202606101005"></script>
+    <script src="/burger.js?v=202606101005"></script>
+    <script src="/messages.js?v=202606101005"></script>
+    <script src="/blocks/planner/script.js?v=202606101005"></script>
+</body>
+</html>

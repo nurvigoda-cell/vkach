@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="/img/fav.svg">
+    <title>В КАЧАЛКЕ</title>
+    <link rel="stylesheet" href="/style.css?v=202606101005">
+    <link rel="stylesheet" href="/preloader.css?v=202606101005">
+    <link rel="stylesheet" href="/login.css?v=202606101005">
+    <link rel="stylesheet" href="/auth.css?v=202606101005">
+</head>
+
+<body>
+    <div id="preloader" class="preloader">
+        <div class="preloader-content">
+            <div class="preloader-progress">
+                <div class="preloader-progress-bar"></div>
+            </div>
+            <div class="preloader-text">0%</div>
+        </div>
+    </div>
+
+    <div class="login-page">
+        <div class="login-container">
+                        <div class="auth-logo-top">
+                <a href="/index.html">
+                    <img src="/img/logk.svg" alt="В КАЧАЛКЕ" class="auth-logo-img">
+                </a>
+                <div class="auth-logo-tag">ВКАЧАЛКЕ</div>
+            </div>
+            <div class="login-title">Вход в аккаунт</div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">Логин</label>
+                    <input type="text" id="login" class="form-input" placeholder="логин" autocomplete="off">
+                    <div id="loginError" class="error-message"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Пароль</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" class="form-input" placeholder="пароль">
+                        <button type="button" class="toggle-password" data-target="password">👁️</button>
+                    </div>
+                    <div id="passwordError" class="error-message"></div>
+                </div>
+
+                <button type="submit" id="submitBtn" class="login-btn">Войти</button>
+            </form>
+
+            <div class="forgot-password">
+                <a href="forgot.html">Восстановить пароль</a>
+            </div>
+
+            <div class="register-link">
+                <a href="reg.html">Нет аккаунта? Зарегистрироваться</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="burgerModal" class="burger-modal">
+        <div class="burger-modal-content">
+            <div class="burger-modal-header">
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="burger-nav">
+                <button class="nav-btn" id="navProfile">Личный кабинет</button>
+            </div>
+            <div class="auth-buttons">
+                <a href="login.html" class="modal-btn-login" id="menuLoginBtn">Войти</a>
+                <a href="reg.html" class="modal-btn-register" id="menuRegisterBtn">Регистрация</a>
+                <button class="modal-btn-logout" id="menuLogoutBtn" style="display: none;">Выйти</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/version.js?v=202606101005"></script>
+    <script src="/preloader.js?v=202606101005"></script>
+    <script src="/login.js?v=202606101005"></script>
+</body>
+
+</html>

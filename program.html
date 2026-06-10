@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="/img/fav.svg">
+    <title>Программа тренировок - В КАЧАЛКЕ</title>
+    <link rel="stylesheet" href="/style.css?v=202606101005">
+    <link rel="stylesheet" href="/preloader.css?v=202606101005">
+    <link rel="stylesheet" href="/program.css?v=202606101005">
+    <link rel="stylesheet" href="/user1.css?v=202606101005">
+    <link rel="stylesheet" href="/user2.css?v=202606101005">
+    <link rel="stylesheet" href="/user3.css?v=202606101005">
+</head>
+
+<body>
+    <div id="preloader" class="preloader">
+        <div class="preloader-content">
+            <div class="preloader-progress">
+                <div class="preloader-progress-bar"></div>
+            </div>
+            <div class="preloader-text">0%</div>
+        </div>
+    </div>
+
+    <!-- Вся страница — flex-колонка на всю высоту экрана -->
+    <div class="program-page">
+
+        <!-- 1. ШАПКА — фиксирована -->
+        <div class="program-header" id="programHeader">
+            <div class="program-header-left">
+                <button class="back-btn" id="backBtn">←</button>
+                <div class="program-title-edit">
+                    <h1 id="programTitle" onclick="editProgramTitle()">Загрузка...</h1>
+                    <button class="edit-title-btn" id="editTitleBtn" onclick="editProgramTitle()">✏️</button>
+                </div>
+            </div>
+            <button id="addDayBtn" class="add-day-btn" title="Добавить день">+</button>
+            <div class="program-header-right"></div>
+        </div>
+
+        <!-- 2. ПАНЕЛЬ ДНЕЙ + КНОПКИ — sticky под шапкой -->
+        <div class="program-fixed-top" id="programFixedTop">
+            <div class="workout-days">
+                <div class="days-tabs" id="daysTabs"></div>
+            </div>
+            <div class="action-buttons-row">
+                <button id="addExerciseBtn" class="add-exercise-btn">
+                    <span>+</span> Добавить упражнение
+                </button>
+                <button class="share-btn" id="shareBtn" title="Экспорт">📄 Экспорт</button>
+                <button class="share-link-btn" id="shareLinkBtn" title="Поделиться ссылкой">🔗</button>
+            </div>
+        </div>
+
+        <!-- 3. СКРОЛЛИРУЕМЫЙ КОНТЕНТ -->
+        <div class="program-scrollable" id="programScrollable">
+            <div class="exercises-list" id="exercisesList">
+                <div class="empty-exercises">
+                    <div class="empty-icon">💪</div>
+                    <p>Нет упражнений</p>
+                    <p class="empty-hint">Нажмите «+ Добавить упражнение», чтобы создать первое</p>
+                </div>
+            </div>
+
+            <div class="workout-comments-section">
+                <div class="workout-comments-header">
+                    <h3>📝 Заметки к тренировке</h3>
+                    <span class="workout-comments-hint">Заметки для</span>
+                </div>
+                <textarea id="workoutComments" class="workout-comments-textarea" maxlength="1000"
+                    placeholder="Например: Сегодня была тяжёлая тренировка..."></textarea>
+                <div class="workout-comments-counter">
+                    <span id="workoutCommentsCounter">0</span>/1000
+                </div>
+                <button id="saveWorkoutCommentsBtn" class="save-workout-comments-btn">💾 Сохранить заметки</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- НИЖНЯЯ НАВИГАЦИЯ -->
+    <div class="bottom-nav">
+        <div class="bottom-nav-item" id="navProfileBottom">
+            <div class="bottom-nav-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <path d="M5 20V19C5 15.5 8 13 12 13C16 13 19 15.5 19 19V20" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="bottom-nav-label">Я</div>
+        </div>
+        <div class="bottom-nav-item" id="navMessagesBottom" style="position:relative;">
+            <div class="bottom-nav-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 20L4 15C2.5 12.5 2.5 9.5 4 7C5.5 4.5 8.5 3 12 3C16 3 19.5 4.5 21 7C22.5 9.5 22.5 12.5 21 15C19.5 17.5 16 19 12 19H3Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <circle cx="8" cy="11" r="1" fill="currentColor"/>
+                    <circle cx="12" cy="11" r="1" fill="currentColor"/>
+                    <circle cx="16" cy="11" r="1" fill="currentColor"/>
+                </svg>
+            </div>
+            <div class="bottom-nav-label">Сообщения</div>
+        </div>
+        <div class="bottom-nav-item" id="navBlocksBottom">
+            <div class="bottom-nav-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <rect x="4" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <rect x="14" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <rect x="4" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <rect x="14" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                </svg>
+            </div>
+            <div class="bottom-nav-label">Блоки</div>
+        </div>
+    </div>
+
+    <!-- Слайдер для просмотра фото -->
+    <div id="sliderModal" class="slider-modal">
+        <span class="slider-close">&times;</span>
+        <div class="slider-container">
+            <button class="slider-prev">‹</button>
+            <img id="sliderImg" class="slider-img" src="" alt="Фото упражнения">
+            <button class="slider-next">›</button>
+        </div>
+        <div class="slider-counter" id="sliderCounter">1 / 1</div>
+    </div>
+
+    <!-- Модальное окно комментария -->
+    <div id="commentModal" class="comment-modal">
+        <div class="comment-modal-content">
+            <div class="comment-modal-header">
+                <h3 id="commentModalTitle">Добавить комментарий</h3>
+                <span class="comment-modal-close">&times;</span>
+            </div>
+            <div class="comment-modal-body">
+                <textarea id="commentTextarea" class="comment-textarea" maxlength="500"
+                    placeholder="Например: Важный совет по выполнению этого упражнения..."></textarea>
+                <div class="comment-char-counter"><span id="commentCharCounter">0</span>/500</div>
+            </div>
+            <div class="comment-modal-footer">
+                <button id="commentSaveBtn" class="comment-save-btn">Сохранить</button>
+                <button id="commentCancelBtn" class="comment-cancel-btn">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно повторений -->
+    <div id="repsRangeModalNew" class="reps-range-modal-new" style="display:none;">
+        <div class="reps-range-content-new">
+            <div class="reps-range-header-new">
+                <h3>Повторения</h3>
+                <button class="reps-range-close-new">&times;</button>
+            </div>
+            <div class="reps-range-body-new">
+                <div class="reps-range-container-new">
+                    <div class="reps-range-col-new">
+                        <div class="reps-range-label-new">От</div>
+                        <div class="reps-range-scroll-new">
+                            <div class="reps-range-values-new" id="repsFromListNew"></div>
+                        </div>
+                    </div>
+                    <div class="reps-range-separator-new">—</div>
+                    <div class="reps-range-col-new">
+                        <div class="reps-range-label-new">До</div>
+                        <div class="reps-range-scroll-new">
+                            <div class="reps-range-values-new" id="repsToListNew"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="reps-range-preview-new">
+                    <span id="repsPreviewValueNew">1 — 10</span>
+                </div>
+            </div>
+            <div class="reps-range-footer-new">
+                <button class="reps-range-cancel-new">Отмена</button>
+                <button class="reps-range-confirm-new">Применить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно веса -->
+    <div id="weightModalNew" class="weight-modal-new" style="display:none;">
+        <div class="weight-content-new">
+            <div class="weight-header-new">
+                <h3>Вес, кг</h3>
+                <button class="weight-close-new">&times;</button>
+            </div>
+            <div class="weight-body-new">
+                <div class="weight-scroll-container-new">
+                    <div class="weight-values-new" id="weightListNew"></div>
+                </div>
+                <div class="weight-preview-new">
+                    <span id="weightPreviewValueNew">0 кг</span>
+                </div>
+            </div>
+            <div class="weight-footer-new">
+                <button class="weight-cancel-new">Отмена</button>
+                <button class="weight-confirm-new">Применить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Диалог редактирования названия -->
+    <div id="editNameDialog" class="custom-dialog">
+        <div class="custom-dialog-content">
+            <div class="custom-dialog-header">
+                <div class="custom-dialog-icon">✏️</div>
+                <div class="custom-dialog-title">Редактировать название</div>
+            </div>
+            <div class="custom-dialog-body">
+                <textarea id="editNameInput" class="comment-textarea" maxlength="100"
+                    placeholder="Введите название упражнения..." style="min-height:80px;"></textarea>
+                <div class="comment-char-counter"><span id="editNameCounter">0</span>/100</div>
+            </div>
+            <div class="custom-dialog-footer">
+                <button class="custom-dialog-btn cancel" id="editNameCancel">Отмена</button>
+                <button class="custom-dialog-btn confirm" id="editNameOk">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Диалог подтверждения -->
+    <div id="confirmDialog" class="custom-dialog">
+        <div class="custom-dialog-content">
+            <div class="custom-dialog-header">
+                <div class="custom-dialog-icon">❓</div>
+                <div class="custom-dialog-title" id="confirmDialogTitle">Подтверждение</div>
+            </div>
+            <div class="custom-dialog-body" id="confirmDialogMessage">Вы уверены?</div>
+            <div class="custom-dialog-footer">
+                <button class="custom-dialog-btn cancel" id="confirmDialogCancel">Отмена</button>
+                <button class="custom-dialog-btn confirm" id="confirmDialogOk">Да</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Диалог уведомления -->
+    <div id="alertDialog" class="custom-dialog">
+        <div class="custom-dialog-content">
+            <div class="custom-dialog-header">
+                <div class="custom-dialog-icon" id="alertDialogIcon">✅</div>
+                <div class="custom-dialog-title" id="alertDialogTitle">Уведомление</div>
+            </div>
+            <div class="custom-dialog-body" id="alertDialogMessage">Сообщение</div>
+            <div class="custom-dialog-footer">
+                <button class="custom-dialog-btn ok" id="alertDialogOk">Хорошо</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Диалог PDF -->
+    <div id="pdfDialog" class="custom-dialog">
+        <div class="custom-dialog-content">
+            <div class="custom-dialog-header">
+                <div class="custom-dialog-icon" id="pdfDialogIcon">📄</div>
+                <div class="custom-dialog-title" id="pdfDialogTitle">Подготовка PDF</div>
+            </div>
+            <div class="custom-dialog-body" id="pdfDialogMessage">Подготовка PDF...</div>
+            <div class="custom-dialog-footer">
+                <button class="custom-dialog-btn confirm" id="pdfDialogBtn">Скачать PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно экспорта -->
+    <div id="exportFormatModal" class="export-modal">
+        <div class="export-modal-content">
+            <div class="export-modal-header">
+                <h3>Выберите формат экспорта</h3>
+                <button class="export-modal-close">&times;</button>
+            </div>
+            <div class="export-modal-body">
+                <button class="export-option-btn pdf-option" data-format="pdf">
+                    <span class="export-icon">📄</span>
+                    <div class="export-info">
+                        <div class="export-title">PDF документ</div>
+                        <div class="export-desc">Красиво оформленный PDF файл с таблицами и структурой</div>
+                    </div>
+                </button>
+                <button class="export-option-btn txt-option" data-format="txt">
+                    <span class="export-icon">📝</span>
+                    <div class="export-info">
+                        <div class="export-title">TXT текстовый файл</div>
+                        <div class="export-desc">Простой текстовый файл, удобный для отправки в мессенджерах</div>
+                    </div>
+                </button>
+            </div>
+            <div class="export-modal-footer">
+                <button class="export-cancel-btn">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Модал прогресса загрузки фото -->
+    <div id="uploadPhotoModal" class="upload-modal">
+        <div class="upload-modal-content">
+            <div class="upload-modal-icon">📷</div>
+            <div class="upload-modal-title">Загрузка фото</div>
+            <div class="upload-modal-subtitle">Пожалуйста, подождите...</div>
+            <div class="upload-progress-bar-wrap">
+                <div class="upload-progress-bar-fill" id="uploadProgressFill"></div>
+            </div>
+            <div class="upload-progress-percent" id="uploadProgressPercent">0%</div>
+            <button class="upload-cancel-btn" id="uploadCancelBtn">✕ Отменить</button>
+        </div>
+    </div>
+
+    <!-- Бургер меню -->
+    <div id="burgerModal" class="burger-modal">
+        <div class="burger-modal-content">
+            <div class="burger-modal-header">
+                <span class="burger-modal-logo">⚡ В КАЧАЛКЕ</span>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="burger-nav">
+                <button class="nav-btn" id="navProfile"><span class="nav-btn-icon">👤</span>Личный кабинет</button>
+            </div>
+            <div class="auth-buttons">
+                <a href="login.html" class="modal-btn-login" id="menuLoginBtn">Войти</a>
+                <a href="reg.html" class="modal-btn-register" id="menuRegisterBtn">Регистрация</a>
+                <button class="modal-btn-logout" id="menuLogoutBtn" style="display:none;">Выйти</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/version.js?v=202606101005"></script>
+    <script src="/preloader.js?v=202606101005"></script>
+    <script src="/burger.js?v=202606101005"></script>
+    <script src="/program1.js?v=202606101005"></script>
+    <script src="/program2.js?v=202606101005"></script>
+    <script src="/program3.js?v=202606101005"></script>
+    <script src="/program4.js?v=202606101005"></script>
+    <script src="/program_share.js?v=202606101005"></script>
+    <script src="/messages.js?v=202606101005"></script>
+
+    <script>
+    (function() {
+        if (typeof window.toggleExercise === 'undefined') {
+            window.toggleExercise = function(exerciseId) {
+                var card = document.querySelector('.exercise-card[data-exercise-id="' + exerciseId + '"]');
+                if (card) card.classList.toggle('collapsed');
+            };
+        }
+    })();
+    </script>
+
+    <!-- Баннер режима просмотра -->
+    <div class="view-mode-banner" id="viewModeBanner" style="display:none">
+        <span>👁 Режим просмотра</span>
+        <span class="view-mode-owner" id="viewModeOwner"></span>
+    </div>
+
+    <!-- Заглушка "доступ ограничен" -->
+    <div class="access-restricted" id="accessRestricted" style="display:none">
+        <div class="access-restricted-inner">
+            <div class="access-icon">🔒</div>
+            <h2>Доступ ограничен</h2>
+            <p>Владелец тренировки ограничил просмотр этой страницы</p>
+            <a href="/" class="access-home-btn">На главную</a>
+        </div>
+    </div>
+
+    <!-- Модал: поделиться -->
+    <div class="modal-overlay" id="shareModal">
+        <div class="modal-box share-modal-box">
+            <div class="modal-handle"></div>
+            <div class="modal-hdr">
+                <span>🔗 Поделиться тренировкой</span>
+                <button class="modal-x" id="closeShareModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="share-url-block">
+                    <div class="share-url-label">Ссылка для просмотра</div>
+                    <div class="share-url-row">
+                        <input type="text" id="shareUrlInput" class="share-url-input" readonly>
+                        <button class="share-copy-btn" id="shareCopyBtn">📋 Копировать</button>
+                    </div>
+                    <div class="share-copied-hint" id="shareCopiedHint" style="display:none">✅ Скопировано!</div>
+                </div>
+
+                <div class="share-visibility-block">
+                    <div class="share-visibility-label">Видимость</div>
+                    <div class="share-visibility-btns">
+                        <button class="vis-btn active" id="visAllBtn" onclick="setVisibility('all')">
+                            🌍 Все по ссылке
+                        </button>
+                        <button class="vis-btn" id="visSelectedBtn" onclick="setVisibility('selected')">
+                            👥 Только выбранные
+                        </button>
+                        <button class="vis-btn vis-btn-red" id="visHiddenBtn" onclick="setVisibility('hidden')">
+                            🔒 Скрыто
+                        </button>
+                    </div>
+                </div>
+
+                <div class="share-users-block" id="shareUsersBlock" style="display:none">
+                    <div class="share-visibility-label">Пользователи с доступом</div>
+                    <div class="share-search-row">
+                        <input type="text" id="shareUserSearch" class="share-url-input" placeholder="Поиск по логину...">
+                        <button class="share-copy-btn" id="shareUserSearchBtn">Найти</button>
+                    </div>
+                    <div id="shareUserResults" class="share-user-results"></div>
+                    <div class="share-visibility-label" style="margin-top:12px">Доступ открыт:</div>
+                    <div id="shareAccessList" class="share-access-list"></div>
+                </div>
+
+                <div class="share-chat-block">
+                    <div class="share-visibility-label">Отправить в чат</div>
+                    <button class="share-chat-btn" id="shareToChatBtn">
+                        💬 Отправить ссылку в чат
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

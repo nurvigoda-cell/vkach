@@ -1,0 +1,328 @@
+/* user3.css v2.0 — модальные окна, новости, адаптив */
+
+@keyframes modalPop {
+    from { opacity: 0; transform: scale(0.88) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* ===== БАЗОВОЕ МОДАЛЬНОЕ ОКНО ===== */
+
+.friends-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.82);
+    z-index: 10001;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.friends-modal-content {
+    background: #1e1e24;
+    border-radius: 24px;
+    width: 92%;
+    max-width: 480px;
+    height: 80vh;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: modalPop 0.32s cubic-bezier(0.34,1.4,0.64,1);
+    border: 1px solid rgba(255,255,255,0.07);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.friends-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    flex-shrink: 0;
+}
+
+.friends-modal-header h3 {
+    color: #E9AE67;
+    font-size: 17px;
+    font-weight: 800;
+    margin: 0;
+    font-family: 'Nunito', sans-serif;
+}
+
+.friends-modal-close,
+.people-modal-close,
+.followers-modal-close,
+.news-modal-close,
+.messages-modal-close {
+    font-size: 26px;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.2s;
+    line-height: 1;
+    padding: 2px;
+    background: none;
+    border: none;
+}
+
+.friends-modal-close:hover,
+.people-modal-close:hover,
+.followers-modal-close:hover,
+.news-modal-close:hover,
+.messages-modal-close:hover { color: #E9AE67; }
+
+#messagesModal .friends-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    flex-shrink: 0;
+}
+
+/* ===== ПОИСК В МОДАЛКЕ ===== */
+
+.modal-search {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    flex-shrink: 0;
+    background: #1e1e24;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.modal-search-input {
+    width: 100%;
+    padding: 10px 16px;
+    border: 1.5px solid rgba(255,255,255,0.07);
+    border-radius: 50px;
+    background: #2c2c32;
+    color: #f0f0f0;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Nunito', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.modal-search-input:focus { border-color: #E9AE67; }
+.modal-search-input::placeholder { color: #555; font-weight: 400; }
+
+/* ===== ТЕЛО МОДАЛКИ ===== */
+
+.friends-modal-body {
+    padding: 14px 16px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.friends-modal-body::-webkit-scrollbar { width: 4px; }
+.friends-modal-body::-webkit-scrollbar-track { background: transparent; }
+.friends-modal-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+.modal-friends-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* ===== ЭЛЕМЕНТ СПИСКА (друг/подписчик/человек) ===== */
+
+.modal-friend-item {
+    background: #242428;
+    border-radius: 16px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: border-color 0.2s, background 0.2s;
+    animation: fadeUp 0.25s ease both;
+}
+
+.modal-friend-item:hover { border-color: rgba(233,174,103,0.2); background: #2a2a30; }
+
+.modal-friend-avatar {
+    width: 46px;
+    height: 46px;
+    background: linear-gradient(135deg, #2c2c32, #1e1e24);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: #E9AE67;
+    overflow: hidden;
+    flex-shrink: 0;
+    cursor: pointer;
+    border: 1.5px solid rgba(255,255,255,0.07);
+    transition: border-color 0.2s;
+}
+
+.modal-friend-avatar:hover { border-color: #E9AE67; }
+.modal-friend-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.modal-friend-info {
+    flex: 1;
+    cursor: pointer;
+    min-width: 0;
+}
+
+.modal-friend-name {
+    font-size: 14px;
+    font-weight: 800;
+    color: #E9AE67;
+    margin-bottom: 2px;
+    font-family: 'Nunito', sans-serif;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.modal-friend-login {
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+}
+
+.modal-friend-id {
+    font-size: 10px;
+    color: #555;
+    margin-top: 1px;
+}
+
+.modal-friend-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.modal-friend-unsubscribe,
+.modal-friend-subscribe {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.modal-friend-unsubscribe {
+    background: rgba(239,83,80,0.12);
+    color: #ef5350;
+    border: 1px solid rgba(239,83,80,0.2);
+}
+
+.modal-friend-unsubscribe:hover { background: rgba(239,83,80,0.22); }
+
+.modal-friend-subscribe {
+    background: #E9AE67;
+    color: #1a1a1e;
+    box-shadow: 0 2px 8px rgba(233,174,103,0.3);
+}
+
+.modal-friend-subscribe:hover { background: #f0bb78; }
+
+.modal-friend-unsubscribe:active,
+.modal-friend-subscribe:active { transform: scale(0.93); }
+
+.no-friends-modal {
+    text-align: center;
+    color: #666;
+    padding: 30px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* ===== НОВОСТИ ===== */
+
+.news-time {
+    font-size: 10px;
+    color: #555;
+    margin-top: 4px;
+    font-weight: 600;
+}
+
+.news-timer {
+    font-size: 9px;
+    color: #E9AE67;
+    margin-top: 2px;
+    font-family: monospace;
+    font-weight: 700;
+}
+
+.news-item {
+    cursor: pointer;
+    transition: background 0.2s;
+    border-radius: 12px;
+    padding: 2px;
+}
+
+.news-item:hover { background: rgba(255,255,255,0.03); }
+
+/* ===== АДАПТИВ ===== */
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Десктоп */
+@media (min-width: 769px) {
+    body { padding-bottom: 90px; }
+
+    .container { padding: 20px; }
+
+    .friends-modal-content {
+        max-width: 520px;
+        height: 75vh;
+    }
+
+    .friends-modal-header h3 { font-size: 18px; }
+
+    .modal-friend-item { padding: 14px 16px; }
+
+    .modal-friend-avatar { width: 50px; height: 50px; font-size: 24px; }
+
+    .modal-friend-name { font-size: 15px; }
+    .modal-friend-login { font-size: 12px; }
+
+    .modal-friend-unsubscribe,
+    .modal-friend-subscribe { font-size: 12px; padding: 7px 14px; }
+}
+
+/* Планшет */
+@media (max-width: 768px) {
+    body { padding-bottom: 80px; }
+}
+
+/* Мобильный */
+@media (max-width: 480px) {
+    body { padding-bottom: 76px; }
+
+    .friends-modal-content {
+        width: 96%;
+        height: 85vh;
+        border-radius: 20px;
+    }
+
+    .modal-friend-item { padding: 10px 12px; gap: 10px; }
+
+    .modal-friend-avatar { width: 40px; height: 40px; font-size: 18px; }
+
+    .modal-friend-name { font-size: 13px; }
+    .modal-friend-login { font-size: 10px; }
+
+    .modal-friend-unsubscribe,
+    .modal-friend-subscribe { padding: 5px 10px; font-size: 10px; }
+}

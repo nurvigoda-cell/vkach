@@ -1,0 +1,294 @@
+/* user-blocks.css v3.1 — точно как iPhone */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+/* ===== ЗАГОЛОВОК ===== */
+.user-blocks-section {
+    margin-top: 24px;
+    border-top: none;
+    padding-top: 0;
+}
+
+.user-blocks-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 0 4px;
+}
+
+.user-blocks-title {
+    font-size: 13px;
+    font-weight: 900;
+    color: #E9AE67;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-family: 'Nunito', sans-serif;
+}
+
+.user-blocks-count {
+    font-size: 11px;
+    font-weight: 700;
+    color: #555;
+    background: #2c2c32;
+    border-radius: 20px;
+    padding: 2px 9px;
+    border: 1px solid rgba(255,255,255,0.07);
+    font-family: 'Nunito', sans-serif;
+}
+
+/* ===== ЭКРАН СМАРТФОНА ===== */
+.phone-screen {
+    background: #000;
+    border-radius: 28px;
+    padding: 14px 12px 20px;
+    border: 1px solid rgba(255,255,255,0.10);
+    position: relative;
+    overflow: clip;
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,0.05) inset,
+        0 20px 60px rgba(0,0,0,0.7);
+    overscroll-behavior: none;
+}
+
+/* Тонкий блик сверху — как стекло */
+.phone-screen::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(255,255,255,0.22) 40%,
+        rgba(255,255,255,0.22) 60%,
+        transparent
+    );
+}
+
+/* Статусбар */
+.phone-statusbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8px 14px;
+    position: relative;
+    z-index: 2;
+}
+
+.phone-statusbar-time {
+    font-size: 15px;
+    font-weight: 800;
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    letter-spacing: .3px;
+}
+
+.phone-statusbar-icons {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.phone-statusbar-icons span {
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+}
+
+/* ===== СЕТКА — точно как iOS ===== */
+.user-blocks-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px 10px;   /* больше вертикальный отступ */
+    padding: 4px 6px 6px;
+    position: relative;
+    z-index: 2;
+}
+
+/* ===== ИКОНКА ===== */
+.user-block-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 0;
+    background: none;
+    border: 2px solid transparent;
+    border-radius: 18px;
+    transition: transform 0.18s cubic-bezier(.34,1.56,.64,1);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    position: relative;
+}
+
+.user-block-card:hover    { transform: scale(1.10) translateY(-3px); }
+.user-block-card:active   { transform: scale(0.86); }
+
+/* Drag */
+.user-block-card.dragging  { opacity: 0.15; transform: scale(0.92); cursor: grabbing; transition: opacity 0.1s, transform 0.1s; }
+.user-block-card.drag-over { border-color: #E9AE67; outline: 2px solid rgba(233,174,103,0.5); transform: scale(1.06); transition: transform 0.12s; }
+
+/* Тряска при drag-mode — как iOS wiggle */
+.user-blocks-grid.drag-mode .user-block-card:not(.dragging) {
+    animation: iosWiggle 0.4s ease-in-out infinite alternate;
+    transform-origin: center bottom;
+}
+@keyframes iosWiggle {
+    0%   { transform: rotate(-2deg) scale(1.0); }
+    100% { transform: rotate(2deg)  scale(1.0); }
+}
+
+/* Иконка — квадрат со скруглёнными углами iOS */
+.user-block-icon-wrapper {
+    width: 72px;
+    height: 72px;
+    border-radius: 18px;    /* iOS superellipse */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: linear-gradient(145deg, #2c2c3c, #1c1c26);
+    box-shadow:
+        0 4px 14px rgba(0,0,0,0.6),
+        0 1px 0 rgba(255,255,255,0.07) inset;
+    border: none;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+/* Глянцевый блик — как на iOS иконках */
+.user-block-icon-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 44%;
+    background: linear-gradient(180deg,
+        rgba(255,255,255,0.13) 0%,
+        rgba(255,255,255,0.01) 100%
+    );
+    border-radius: 18px 18px 50% 50%;
+    pointer-events: none;
+}
+
+.user-block-card:hover .user-block-icon-wrapper {
+    box-shadow:
+        0 8px 24px rgba(0,0,0,0.7),
+        0 0 16px rgba(233,174,103,0.12),
+        0 1px 0 rgba(255,255,255,0.10) inset;
+}
+
+.user-block-icon {
+    font-size: 34px;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    line-height: 1;
+}
+
+/* Подпись — белая, мелкая, как iOS */
+.user-block-title {
+    font-size: 11px;
+    font-weight: 500;
+    font-family: -apple-system, 'SF Pro Text', 'Nunito', sans-serif;
+    color: rgba(255,255,255,0.88);
+    text-align: center;
+    word-break: break-word;
+    max-width: 76px;
+    line-height: 1.2;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+
+/* Описание скрыто */
+.user-block-description { display: none; }
+
+/* ===== ПУСТОЕ СОСТОЯНИЕ ===== */
+.no-blocks-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 32px 16px;
+    color: rgba(255,255,255,0.3);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Nunito', sans-serif;
+    line-height: 1.7;
+}
+.no-blocks-icon {
+    font-size: 40px;
+    display: block;
+    margin-bottom: 10px;
+    opacity: .45;
+}
+
+/* ===== АДАПТИВ ===== */
+@media (min-width: 600px) {
+    .user-blocks-grid { grid-template-columns: repeat(5, 1fr); gap: 22px 12px; }
+    .user-block-icon-wrapper { width: 76px; height: 76px; border-radius: 20px; }
+    .user-block-icon { font-size: 36px; }
+    .user-block-title { font-size: 12px; max-width: 80px; }
+}
+
+@media (max-width: 420px) {
+    .user-blocks-grid { gap: 18px 6px; }
+    .user-block-icon-wrapper { width: 64px; height: 64px; border-radius: 16px; }
+    .user-block-icon { font-size: 30px; }
+    .user-block-title { font-size: 10px; max-width: 68px; }
+    .phone-screen { padding: 12px 8px 18px; border-radius: 24px; }
+}
+
+@media (max-width: 360px) {
+    .user-block-icon-wrapper { width: 56px; height: 56px; border-radius: 14px; }
+    .user-block-icon { font-size: 26px; }
+    .user-blocks-grid { gap: 16px 4px; }
+}
+
+/* ===== SVG иконки блоков (вариант 2 — цветные заливки) ===== */
+.user-block-icon-svg {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0;
+    padding: 16%;
+}
+
+.user-block-icon-svg svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.user-block-icon-wrapper:has(.user-block-icon-svg) {
+    background: none;
+}
+
+/* Все дочерние элементы карточки не перехватывают pointer */
+/* pointer-events на дочерних убран — мешает onclick */
+
+/* Клон иконки следующий за курсором при drag */
+.drag-ghost-icon {
+    pointer-events: none !important;
+    -webkit-touch-callout: none;
+    user-select: none;
+}
+
+/* Блокируем контекстное меню Android/iOS на иконках */
+.user-blocks-grid,
+.user-block-card,
+.user-block-icon-wrapper,
+.user-block-icon-img img,
+.user-block-icon-svg {
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+}
+
+.user-block-icon-img img {
+    pointer-events: none !important;
+    -webkit-user-drag: none !important;
+    user-drag: none !important;
+}

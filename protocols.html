@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="/img/fav.svg">
+    <title>Протоколы тренировок - В КАЧАЛКЕ</title>
+    <link rel="stylesheet" href="/style.css?v=202606101005">
+    <link rel="stylesheet" href="/preloader.css?v=202606101005">
+    <link rel="stylesheet" href="/protocols.css?v=202606101005">
+    <link rel="stylesheet" href="/user1.css?v=202606101005">
+    <link rel="stylesheet" href="/user2.css?v=202606101005">
+    <link rel="stylesheet" href="/user3.css?v=202606101005">
+</head>
+
+<body>
+    <div id="preloader" class="preloader">
+        <div class="preloader-content">
+            <div class="preloader-progress">
+                <div class="preloader-progress-bar"></div>
+            </div>
+            <div class="preloader-text">0%</div>
+        </div>
+    </div>
+
+    <div class="protocols-page">
+        <div class="protocols-header">
+            <div class="burger-menu" id="burgerMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="protocols-title">
+                <span class="protocols-icon">📋</span>
+                <h1>Протоколы тренировок</h1>
+            </div>
+            <div class="placeholder"></div>
+        </div>
+
+        <div class="protocols-container">
+            <div class="add-protocol-btn-container">
+                <button id="addProtocolBtn" class="add-protocol-btn">
+                    <span>+</span> Добавить протокол
+                </button>
+            </div>
+
+            <div class="protocols-search">
+                <input type="text" id="protocolSearchInput" class="protocol-search-input"
+                    placeholder="🔍 Поиск протоколов...">
+            </div>
+
+            <div class="protocols-list" id="protocolsList">
+                <div class="loading-protocols">Загрузка...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- НИЖНЯЯ НАВИГАЦИЯ -->
+    <div class="bottom-nav">
+        <div class="bottom-nav-item" id="navProfileBottom">
+            <div class="bottom-nav-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5" fill="none" />
+                    <path d="M5 20V19C5 15.5 8 13 12 13C16 13 19 15.5 19 19V20" stroke="currentColor" stroke-width="1.5"
+                        fill="none" stroke-linecap="round" />
+                </svg>
+            </div>
+            <div class="bottom-nav-label">Я</div>
+        </div>
+        <div class="bottom-nav-item" id="navMessagesBottom" style="position: relative;">
+            <div class="bottom-nav-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M3 20L4 15C2.5 12.5 2.5 9.5 4 7C5.5 4.5 8.5 3 12 3C16 3 19.5 4.5 21 7C22.5 9.5 22.5 12.5 21 15C19.5 17.5 16 19 12 19H3Z"
+                        stroke="currentColor" stroke-width="1.5" fill="none" />
+                    <circle cx="8" cy="11" r="1" fill="currentColor" />
+                    <circle cx="12" cy="11" r="1" fill="currentColor" />
+                    <circle cx="16" cy="11" r="1" fill="currentColor" />
+                </svg>
+            </div>
+            <div class="bottom-nav-label">Сообщения</div>
+        </div>
+        <div class="bottom-nav-item" id="navBlocksBottom">
+            <div class="bottom-nav-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="4" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"
+                        fill="none" />
+                    <rect x="14" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"
+                        fill="none" />
+                    <rect x="4" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"
+                        fill="none" />
+                    <rect x="14" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"
+                        fill="none" />
+                </svg>
+            </div>
+            <div class="bottom-nav-label">Блоки</div>
+        </div>
+    </div>
+
+    <div id="protocolModal" class="protocol-modal">
+        <div class="protocol-modal-content">
+            <div class="protocol-modal-header">
+                <h3 id="modalTitle">Новый протокол</h3>
+                <span class="protocol-modal-close">&times;</span>
+            </div>
+            <div class="protocol-modal-body">
+                <div class="form-group">
+                    <label class="form-label">Название протокола</label>
+                    <input type="text" id="protocolNameInput" class="form-input"
+                        placeholder="Например: Тренировка на массу" maxlength="100">
+                    <div class="char-counter" id="nameCounter">0/100</div>
+                </div>
+            </div>
+            <div class="protocol-modal-footer">
+                <button id="saveProtocolBtn" class="save-protocol-btn">Сохранить</button>
+                <button id="cancelModalBtn" class="cancel-modal-btn">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteConfirmModal" class="protocol-modal">
+        <div class="protocol-modal-content" style="max-width: 350px;">
+            <div class="protocol-modal-header">
+                <h3>Удалить протокол?</h3>
+                <span class="delete-modal-close">&times;</span>
+            </div>
+            <div class="protocol-modal-body">
+                <p id="deleteConfirmText" style="text-align: center; color: #ccc;">Вы уверены, что хотите удалить этот
+                    протокол?</p>
+            </div>
+            <div class="protocol-modal-footer">
+                <button id="confirmDeleteBtn" class="confirm-delete-btn">Удалить</button>
+                <button id="cancelDeleteBtn" class="cancel-modal-btn">Отмена</button>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+    <div id="burgerModal" class="burger-modal">
+        <div class="burger-modal-content">
+            <div class="burger-modal-header">
+                <span class="burger-modal-logo">⚡ В КАЧАЛКЕ</span>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="burger-nav">
+                <button class="nav-btn" id="navProfile"><span class="nav-btn-icon">👤</span>Личный кабинет</button>
+            </div>
+            <div class="auth-buttons">
+                <div class="auth-label">Аккаунт</div>
+                <a href="login.html" class="modal-btn-login" id="menuLoginBtn">🔑 Войти</a>
+                <a href="reg.html" class="modal-btn-register" id="menuRegisterBtn">✨ Регистрация</a>
+                <button class="modal-btn-logout" id="menuLogoutBtn" style="display: none;">🚪 Выйти</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/version.js?v=202606101005"></script>
+    <script src="/preloader.js?v=202606101005"></script>
+    <script src="/burger.js?v=202606101005"></script>
+    <script src="/protocols.js?v=202606101005"></script>
+    <script src="/messages.js?v=202606101005"></script>
+</body>
+
+</html>

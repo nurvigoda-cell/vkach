@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="/img/fav.svg">
+    <title>В КАЧАЛКЕ</title>
+    <link rel="stylesheet" href="/style.css?v=202606101005">
+    <link rel="stylesheet" href="/preloader.css?v=202606101005">
+    <link rel="stylesheet" href="/forgot.css?v=202606101005">
+    <link rel="stylesheet" href="/auth.css?v=202606101005">
+</head>
+
+<body>
+    <div id="preloader" class="preloader">
+        <div class="preloader-content">
+            <div class="preloader-progress">
+                <div class="preloader-progress-bar"></div>
+            </div>
+            <div class="preloader-text">0%</div>
+        </div>
+    </div>
+
+    <div class="forgot-page">
+        <div class="forgot-container">
+                        <div class="auth-logo-top">
+                <a href="/index.html">
+                    <img src="/img/logk.svg" alt="В КАЧАЛКЕ" class="auth-logo-img">
+                </a>
+                <div class="auth-logo-tag">ВКАЧАЛКЕ</div>
+            </div>
+            <div class="forgot-title">Восстановление пароля</div>
+            <div class="forgot-description">
+                Введите email, указанный при регистрации.
+            </div>
+
+            <form id="forgotForm">
+                <div class="form-group">
+                    <label class="form-label">Электронная почта</label>
+                    <input type="email" id="email" class="form-input" placeholder="example@mail.ru" autocomplete="off">
+                    <div id="emailError" class="error-message"></div>
+                </div>
+                <button type="submit" id="submitBtn" class="forgot-btn">Отправить</button>
+            </form>
+
+            <div class="login-link">
+                <a href="login.html">← Вернуться ко входу</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="passwordModal" class="password-modal">
+        <div class="password-modal-content">
+            <div class="password-modal-header">
+                <span class="password-modal-close">&times;</span>
+            </div>
+            <div class="password-modal-body">
+                <div class="password-modal-icon">🔐</div>
+                <div class="password-modal-title">Запомните ваш пароль</div>
+                <div class="password-modal-login" id="modalLogin"></div>
+                <div class="password-modal-password" id="modalPassword"></div>
+                <div class="password-modal-note">Сохраните эти данные в надёжном месте</div>
+                <button class="password-modal-btn" id="modalCloseBtn">Хорошо, запомнил</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="burgerModal" class="burger-modal">
+        <div class="burger-modal-content">
+            <div class="burger-modal-header">
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="burger-nav">
+                <button class="nav-btn" id="navProfile">Личный кабинет</button>
+            </div>
+            <div class="auth-buttons">
+                <a href="login.html" class="modal-btn-login" id="menuLoginBtn">Войти</a>
+                <a href="reg.html" class="modal-btn-register" id="menuRegisterBtn">Регистрация</a>
+                <button class="modal-btn-logout" id="menuLogoutBtn" style="display: none;">Выйти</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/version.js?v=202606101005"></script>
+    <script src="/preloader.js?v=202606101005"></script>
+    <script src="/forgot.js?v=202606101005"></script>
+</body>
+
+</html>

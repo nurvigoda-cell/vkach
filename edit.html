@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="/img/fav.svg">
+    <title>Редактирование профиля — В КАЧАЛКЕ</title>
+    <link rel="stylesheet" href="/style.css?v=202606101005">
+    <link rel="stylesheet" href="/preloader.css?v=202606101005">
+    <link rel="stylesheet" href="/edit.css?v=202606101005">
+</head>
+
+<body>
+    <div id="preloader" class="preloader">
+        <div class="preloader-content">
+            <div class="preloader-progress">
+                <div class="preloader-progress-bar"></div>
+            </div>
+            <div class="preloader-text">0%</div>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <!-- Шапка -->
+        <div class="top-row">
+            <div class="burger-menu" id="burgerMenu">
+                <span></span><span></span><span></span>
+            </div>
+            <div style="width:26px;"></div>
+        </div>
+
+        <div class="edit-container">
+
+            <!-- Заголовок -->
+            <div class="edit-header">
+                <h1 class="edit-title">✏️ Редактирование</h1>
+                <div class="user-info-line">
+                    <span class="user-login" id="userLoginDisplay"></span>
+                    <span class="user-id" id="userIdDisplay"></span>
+                </div>
+            </div>
+
+            <!-- Аватар -->
+            <div class="avatar-section">
+                <div class="avatar-preview" id="avatarPreview" onclick="document.getElementById('avatarInput').click()">
+                    <img id="avatarImg" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:none;">
+                    <span id="avatarText">👤</span>
+                </div>
+                <button type="button" id="uploadAvatarBtn" class="upload-avatar-btn">📷 Загрузить фото</button>
+                <input type="file" id="avatarInput" accept="image/*" style="display:none">
+                <div id="avatarError" class="error-message"></div>
+            </div>
+
+            <form id="editForm">
+
+                <!-- Основная информация -->
+                <div class="form-section">
+                    <div class="form-section-title">👤 Основное</div>
+
+                    <div class="form-group">
+                        <label class="form-label">Имя</label>
+                        <input type="text" id="name" class="form-input" placeholder="Ваше имя" maxlength="15">
+                        <div id="nameError" class="error-message"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Кто я</label>
+                        <select id="userType" class="form-select">
+                            <option value="Тренер">🏋️ Тренер</option>
+                            <option value="Спортсмен">💪 Спортсмен</option>
+                            <option value="Судья">⚖️ Судья</option>
+                            <option value="Болельщик">📣 Болельщик</option>
+                            <option value="Другое">✨ Другое</option>
+                        </select>
+                        <input type="text" id="userTypeCustom" class="form-input"
+                            placeholder="Свой вариант..." style="display:none;margin-top:10px;">
+                        <div id="userTypeError" class="error-message"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">О себе</label>
+                        <textarea id="bio" class="form-textarea" rows="4" maxlength="200"
+                            placeholder="Расскажите о себе..."></textarea>
+                        <div class="char-counter" id="bioCounter">0/200</div>
+                        <div id="bioError" class="error-message"></div>
+                    </div>
+                </div>
+
+                <!-- Контакты -->
+                <div class="form-section">
+                    <div class="form-section-title">📍 Контакты</div>
+
+                    <div class="form-group">
+                        <label class="form-label">Город</label>
+                        <select id="city" class="form-select">
+                            <option value="">Выберите город</option>
+                            <option value="Москва">Москва</option>
+                            <option value="Санкт-Петербург">Санкт-Петербург</option>
+                            <option value="Новосибирск">Новосибирск</option>
+                            <option value="Екатеринбург">Екатеринбург</option>
+                            <option value="Казань">Казань</option>
+                            <option value="Нижний Новгород">Нижний Новгород</option>
+                            <option value="Красноярск">Красноярск</option>
+                            <option value="Челябинск">Челябинск</option>
+                            <option value="Самара">Самара</option>
+                            <option value="Уфа">Уфа</option>
+                            <option value="Ростов-на-Дону">Ростов-на-Дону</option>
+                            <option value="Омск">Омск</option>
+                            <option value="Воронеж">Воронеж</option>
+                            <option value="Пермь">Пермь</option>
+                            <option value="Волгоград">Волгоград</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Телефон</label>
+                        <input type="tel" id="phone" class="form-input" placeholder="+7 (999) 123-45-67">
+                        <div id="phoneError" class="error-message"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Сайт</label>
+                        <input type="text" id="website" class="form-input" placeholder="example.com">
+                    </div>
+                </div>
+
+                <!-- Безопасность — почта -->
+                <div class="form-section">
+                    <div class="form-section-title">📧 Изменить почту</div>
+                    <div class="form-group">
+                        <label class="form-label">Новая почта</label>
+                        <input type="email" id="newEmail" class="form-input"
+                            placeholder="Новый адрес почты" autocomplete="off" value="">
+                        <div id="emailError" class="error-message"></div>
+                    </div>
+                    <button type="button" id="changeEmailBtn" class="change-email-save-btn">
+                        💾 Сохранить почту
+                    </button>
+                </div>
+
+                <!-- Безопасность — пароль -->
+                <div class="form-section">
+                    <div class="form-section-title">🔒 Изменить пароль</div>
+
+                    <div class="form-group">
+                        <label class="form-label">Старый пароль</label>
+                        <div class="password-wrapper-eye">
+                            <input type="password" id="oldPassword" class="form-input"
+                                placeholder="Старый пароль" autocomplete="new-password" value="">
+                            <button type="button" class="toggle-password-eye" data-target="oldPassword">👁️</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Новый пароль</label>
+                        <div class="password-wrapper-eye">
+                            <input type="password" id="newPassword" class="form-input"
+                                placeholder="Новый пароль" autocomplete="new-password" value="">
+                            <button type="button" class="toggle-password-eye" data-target="newPassword">👁️</button>
+                        </div>
+                    </div>
+
+                    <div id="passwordError" class="error-message"></div>
+                    <button type="button" id="changePasswordBtn" class="change-password-save-btn">
+                        🔑 Сохранить пароль
+                    </button>
+                </div>
+
+                <!-- Кнопки -->
+                <div class="form-buttons">
+                    <button type="submit" id="submitBtn" class="save-btn">✅ Сохранить изменения</button>
+                    <button type="button" id="cancelBtn" class="cancel-btn">Отмена</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Бургер меню -->
+    <div id="burgerModal" class="burger-modal">
+        <div class="burger-modal-content">
+            <div class="burger-modal-header">
+                <span class="burger-modal-logo">⚡ В КАЧАЛКЕ</span>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="burger-nav">
+                <button class="nav-btn" id="navProfile">
+                    <span class="nav-btn-icon">👤</span>Личный кабинет
+                </button>
+            </div>
+            <div class="auth-buttons">
+                <div class="auth-label">Аккаунт</div>
+                <a href="login.html" class="modal-btn-login" id="menuLoginBtn">🔑 Войти</a>
+                <a href="reg.html" class="modal-btn-register" id="menuRegisterBtn">✨ Регистрация</a>
+                <button class="modal-btn-logout" id="menuLogoutBtn" style="display:none;">🚪 Выйти</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модал успеха -->
+    <div id="successModal" class="success-modal">
+        <div class="success-modal-content">
+            <div class="success-modal-header">
+                <span class="success-modal-close">&times;</span>
+            </div>
+            <div class="success-modal-body">
+                <div class="success-modal-icon">✅</div>
+                <div class="success-modal-title">Профиль обновлён!</div>
+                <div class="success-modal-message" id="successMessage"></div>
+                <button class="success-modal-btn" id="successModalCloseBtn">Хорошо</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/version.js?v=202606101005"></script>
+    <script src="/preloader.js?v=202606101005"></script>
+    <script src="/burger.js?v=202606101005"></script>
+    <script src="/edit.js?v=202606101005"></script>
+</body>
+
+</html>
