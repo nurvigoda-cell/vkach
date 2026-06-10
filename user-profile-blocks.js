@@ -24,6 +24,12 @@
             description: 'Ваши услуги и цены',
             icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>',
         },
+        {
+            type: 'clock',
+            title: 'Часы',
+            description: 'Текущее время в реальном времени',
+            icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>',
+        },
     ];
 
     // ── Состояние ────────────────────────────────────────────
@@ -31,6 +37,7 @@
     let currentUserId = null;
     let isOwner = false;
     let blocks = [];
+    let clockIntervals = new Map();
     // Лайтбокс
     let lightboxPhotos = [];
     let lightboxIndex = 0;
@@ -508,6 +515,11 @@
     function renderZone() {
         const zone = document.getElementById('pb-zone');
         if (!zone) return;
+
+        // Очищаем таймеры часов перед полной перерисовкой
+        clockIntervals.forEach(interval => clearInterval(interval));
+        clockIntervals.clear();
+
         zone.innerHTML = '';
 
         blocks.forEach(block => {
@@ -550,8 +562,67 @@
         switch(block.block_type) {
             case 'photo_gallery': return renderPhotoGallery(block);
             case 'services': return renderServices(block);
+            case 'clock': return renderClockBlock(block);
             default: return null;
         }
+    }
+
+    function setupBlockControls(block, header, content, expandedDisplay = 'block') {
+        let collapsed = !!block.is_collapsed;
+
+        const applyDisplay = () => {
+            content.style.display = collapsed ? 'none' : expandedDisplay;
+        };
+
+        applyDisplay();
+
+        if (!isOwner) {
+            header.style.cursor = 'pointer';
+            const chevron = document.createElement('span');
+            chevron.style.cssText = 'color:#555;transition:transform .2s;display:flex;align-items:center;margin-left:auto;';
+            chevron.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="${collapsed ? 'M6 9l6 6 6-6' : 'M18 15l-6-6-6 6'}"/></svg>`;
+            header.appendChild(chevron);
+            header.addEventListener('click', () => {
+                collapsed = !collapsed;
+                applyDisplay();
+                chevron.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="${collapsed ? 'M6 9l6 6 6-6' : 'M18 15l-6-6-6 6'}"/></svg>`;
+            });
+        }
+
+        if (!isOwner) return;
+
+        const collapseBtn = document.createElement('button');
+        collapseBtn.className = 'pb-block-menu-btn';
+        const svgUp = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>`;
+        const svgDown = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>`;
+
+        const applyCollapse = () => {
+            applyDisplay();
+            collapseBtn.innerHTML = collapsed ? svgDown : svgUp;
+            collapseBtn.title = collapsed ? 'Развернуть' : 'Свернуть';
+        };
+        applyCollapse();
+
+        collapseBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            collapsed = !collapsed;
+            applyCollapse();
+            try {
+                await fetch(`/api/profile-blocks/${block.id}/collapse`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: currentUserId, isCollapsed: collapsed })
+                });
+            } catch (e) {}
+        });
+
+        const menuBtn = document.createElement('button');
+        menuBtn.className = 'pb-block-menu-btn';
+        menuBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>`;
+        menuBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleBlockMenu(block, menuBtn); });
+
+        header.appendChild(collapseBtn);
+        header.appendChild(menuBtn);
     }
 
     // ── Блок "Мои фото" ──────────────────────────────────────
@@ -571,57 +642,8 @@
         grid.className = 'pb-photo-grid';
         grid.id = `pb-grid-${block.id}`;
 
-        // Применяем свёрнутость для всех (гость видит то же что владелец)
         if (block.is_collapsed && !isOwner) grid.style.display = 'none';
-
-        // Гость может кликнуть на заголовок чтобы развернуть/свернуть (без сохранения)
-        if (!isOwner) {
-            header.style.cursor = 'pointer';
-            const chevron = document.createElement('span');
-            chevron.style.cssText = 'color:#555;transition:transform .2s;display:flex;align-items:center;margin-left:auto;';
-            chevron.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="${block.is_collapsed ? 'M6 9l6 6 6-6' : 'M18 15l-6-6-6 6'}"/></svg>`;
-            header.appendChild(chevron);
-            header.addEventListener('click', () => {
-                const isHidden = grid.style.display === 'none';
-                grid.style.display = isHidden ? 'grid' : 'none';
-                chevron.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="${isHidden ? 'M18 15l-6-6-6 6' : 'M6 9l6 6 6-6'}"/></svg>`;
-            });
-        }
-
-        if (isOwner) {
-            const collapseBtn = document.createElement('button');
-            collapseBtn.className = 'pb-block-menu-btn';
-            const svgUp = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>`;
-            const svgDown = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>`;
-
-            let isCollapsed = !!block.is_collapsed;
-            const applyCollapse = () => {
-                grid.style.display = isCollapsed ? 'none' : 'grid';
-                collapseBtn.innerHTML = isCollapsed ? svgDown : svgUp;
-                collapseBtn.title = isCollapsed ? 'Развернуть' : 'Свернуть';
-            };
-            applyCollapse();
-
-            collapseBtn.addEventListener('click', async () => {
-                isCollapsed = !isCollapsed;
-                applyCollapse();
-                try {
-                    await fetch(`/api/profile-blocks/${block.id}/collapse`, {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ userId: currentUserId, isCollapsed })
-                    });
-                } catch(e) {}
-            });
-
-            const menuBtn = document.createElement('button');
-            menuBtn.className = 'pb-block-menu-btn';
-            menuBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>`;
-            menuBtn.addEventListener('click', e => { e.stopPropagation(); toggleBlockMenu(block, menuBtn); });
-
-            header.appendChild(collapseBtn);
-            header.appendChild(menuBtn);
-        }
+        setupBlockControls(block, header, grid, 'grid');
 
         wrap.appendChild(header);
         wrap.appendChild(grid);
@@ -1112,6 +1134,32 @@
             font-family: inherit; transition: .18s;
         }
         .pb-svc-save-btn:hover { opacity: .9; }
+
+        .pb-clock-content {
+            padding: 0 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .pb-clock-display {
+            font-size: 40px;
+            font-weight: 700;
+            color: #E9AE67;
+            line-height: 1.05;
+            letter-spacing: .05em;
+            padding: 16px 0 0;
+            white-space: nowrap;
+        }
+        .pb-clock-date {
+            font-size: 12px;
+            color: #bbb;
+            text-transform: capitalize;
+        }
+        .pb-clock-message {
+            font-size: 13px;
+            color: #888;
+            padding-bottom: 10px;
+        }
         `;
         document.head.appendChild(s);
     }
@@ -1137,57 +1185,7 @@
         grid.id = `pb-svc-grid-${block.id}`;
         content.appendChild(grid);
 
-        // Применяем свёрнутость для гостя
-        if (block.is_collapsed && !isOwner) content.style.display = 'none';
-
-        // Гость может кликнуть на заголовок чтобы развернуть/свернуть (без сохранения)
-        if (!isOwner) {
-            header.style.cursor = 'pointer';
-            const chevron = document.createElement('span');
-            chevron.style.cssText = 'color:#555;transition:transform .2s;display:flex;align-items:center;margin-left:auto;';
-            chevron.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="${block.is_collapsed ? 'M6 9l6 6 6-6' : 'M18 15l-6-6-6 6'}"/></svg>`;
-            header.appendChild(chevron);
-            header.addEventListener('click', () => {
-                const isHidden = content.style.display === 'none';
-                content.style.display = isHidden ? 'block' : 'none';
-                chevron.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="${isHidden ? 'M18 15l-6-6-6 6' : 'M6 9l6 6 6-6'}"/></svg>`;
-            });
-        }
-
-        if (isOwner) {
-            const collapseBtn = document.createElement('button');
-            collapseBtn.className = 'pb-block-menu-btn';
-            const svgUp = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>`;
-            const svgDown = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>`;
-
-            let collapsed = !!block.is_collapsed;
-            const applyCollapse = () => {
-                content.style.display = collapsed ? 'none' : 'block';
-                collapseBtn.innerHTML = collapsed ? svgDown : svgUp;
-                collapseBtn.title = collapsed ? 'Развернуть' : 'Свернуть';
-            };
-            applyCollapse();
-
-            collapseBtn.addEventListener('click', async () => {
-                collapsed = !collapsed;
-                applyCollapse();
-                try {
-                    await fetch(`/api/profile-blocks/${block.id}/collapse`, {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ userId: currentUserId, isCollapsed: collapsed })
-                    });
-                } catch(e) {}
-            });
-
-            const menuBtn = document.createElement('button');
-            menuBtn.className = 'pb-block-menu-btn';
-            menuBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>`;
-            menuBtn.addEventListener('click', e => { e.stopPropagation(); toggleBlockMenu(block, menuBtn); });
-
-            header.appendChild(collapseBtn);
-            header.appendChild(menuBtn);
-        }
+        setupBlockControls(block, header, content, 'block');
 
         if (isOwner) {
             const addBtn = document.createElement('button');
@@ -1203,6 +1201,66 @@
         loadServicesGrid(block, grid);
 
         return wrap;
+    }
+
+    function renderClockBlock(block) {
+        const wrap = document.createElement('div');
+        wrap.className = 'pb-block';
+        wrap.dataset.blockId = block.id;
+        wrap.dataset.blockType = block.block_type;
+
+        const header = document.createElement('div');
+        header.className = 'pb-block-header';
+        header.innerHTML = `<span class="pb-block-title">Часы</span>`;
+
+        const content = document.createElement('div');
+        content.className = 'pb-clock-content';
+
+        const clockDisplay = document.createElement('div');
+        clockDisplay.className = 'pb-clock-display';
+        clockDisplay.textContent = '00:00:00';
+
+        const clockDate = document.createElement('div');
+        clockDate.className = 'pb-clock-date';
+        clockDate.textContent = '';
+
+        const clockMessage = document.createElement('div');
+        clockMessage.className = 'pb-clock-message';
+        clockMessage.textContent = 'Обновляется в реальном времени';
+
+        content.appendChild(clockDisplay);
+        content.appendChild(clockDate);
+        content.appendChild(clockMessage);
+
+        wrap.appendChild(header);
+        wrap.appendChild(content);
+
+        setupBlockControls(block, header, content, 'block');
+        updateClock(clockDisplay, clockDate, block.id);
+
+        return wrap;
+    }
+
+    function updateClock(clockDisplay, clockDate, blockId) {
+        const formatterTime = new Intl.DateTimeFormat('ru-RU', {
+            hour: '2-digit', minute: '2-digit', second: '2-digit'
+        });
+        const formatterDate = new Intl.DateTimeFormat('ru-RU', {
+            weekday: 'long', day: '2-digit', month: 'long'
+        });
+
+        const tick = () => {
+            const now = new Date();
+            clockDisplay.textContent = formatterTime.format(now);
+            clockDate.textContent = formatterDate.format(now);
+        };
+
+        tick();
+        const interval = setInterval(tick, 1000);
+        if (clockIntervals.has(blockId)) {
+            clearInterval(clockIntervals.get(blockId));
+        }
+        clockIntervals.set(blockId, interval);
     }
 
     async function loadServicesGrid(block, grid) {
